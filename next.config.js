@@ -1,10 +1,12 @@
 // next.config.js
 const withPlugins = require('next-compose-plugins');
-const optimizedImages = require('next-optimized-images');
+/* For now use next-images, since next-optimized-images 1.4.1 has a problematic dependencies on tunnel-agent (moderate severity vulnerability) 
+and gulp-util (which is a deprecated). Swap packages when fixed. */
+const withImages = require('next-images'); 
 
 module.exports = withPlugins([
-  [optimizedImages, {
-    /* config for next-optimized-images */
+  [withImages, {
+    /* config for next-images */
   }],
 
   // your other plugins here
