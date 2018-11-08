@@ -1,18 +1,22 @@
 {
   "name": "chittawela-next",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
+  "private": true,
   "main": "index.js",
   "scripts": {
     "dev": "next",
     "build": "next build",
     "start": "next start"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["Next.js"],
+  "author": "Duncan van Tongeren",
+  "license": "GNU LGPL",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tongeren/chittawela-next.git"
+  },
   "dependencies": {
-    "babel-preset-next": "^1.2.0",
     "cloudinary-react": "^1.0.6",
     "next": "^7.0.2",
     "next-assets-import": "0.0.2",

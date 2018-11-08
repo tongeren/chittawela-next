@@ -4,7 +4,7 @@ import { Image } from 'cloudinary-react';
 const imageSlide = (props) => (
   <Fragment> 
     <div className={"Wrapper"}>
-      { props.imgPaths.map((path, i) => <Image key={i} style={{ width: '100vw' }} publicId={path} />) }
+      { props.imgPaths.map((path, i) => <Image key={i} style={{ width: '100vw' }} publicId={path} />) } 
     </div>
     <style jsx>{`
       .Wrapper {

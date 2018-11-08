@@ -13,3 +13,5 @@ node_modules/
 .DS_Store
 .env.production
 npm-debug.log*
+TODO.md
+ERRORS.md
