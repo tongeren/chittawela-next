@@ -12,8 +12,18 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "babel-preset-next": "^1.2.0",
+    "cloudinary-react": "^1.0.6",
     "next": "^7.0.2",
+    "next-assets-import": "0.0.2",
+    "next-compose-plugins": "^2.1.1",
+    "next-optimized-images": "^1.4.1",
     "react": "^16.6.0",
-    "react-dom": "^16.6.0"
+    "react-dom": "^16.6.0",
+    "styled-jsx": "^3.1.0",
+    "tunnel-agent": "^0.6.0"
+  },
+  "devDependencies": {
+    "file-loader": "^2.0.0"
   }
 }
