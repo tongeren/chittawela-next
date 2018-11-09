@@ -4,7 +4,7 @@ import Link from 'next/link';
 const navigationItem = (props) => (
   <Fragment>
     <li className={"NavigationItem"}>
-      <Link href={props.path}>
+      <Link href={props.path} prefetch>
         <a className={"Link"}>{props.navText}</a>
       </Link>
     </li>
