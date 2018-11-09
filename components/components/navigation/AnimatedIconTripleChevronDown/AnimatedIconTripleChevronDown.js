@@ -2,7 +2,9 @@ import { Component, Fragment } from 'react';
 import { withRouter } from 'next/router';
 import { nextPage } from '../../../routes/Routes';
 
-const tripleChevronDownIcon = require('../../../../static/icons/TripleChevronDown.svg');
+// const tripleChevronDownIcon = require('../../../../static/icons/TripleChevronDown.svg');
+import tripleChevronDownIcon from '../../../../static/icons/TripleChevronDown.svg';
+
 
 class AnimatedIconTripleChevronDown extends Component {
     componentDiDMount() {

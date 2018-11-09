@@ -33,6 +33,7 @@ const navigationItem = (props) => (
         color: black;
       }
   
+      /*
       @media (min-width: 500px) {
         .NavigationItem {
           margin: 0;
@@ -58,6 +59,7 @@ const navigationItem = (props) => (
           color: whitesmoke;
         }
       }
+      */
     `}
     </style>
   </Fragment>  

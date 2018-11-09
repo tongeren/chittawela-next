@@ -14,15 +14,15 @@ const webpackConfig = {
   distDir: 'build',
   webpack: (config, options) => {
     config.module.rules.push({
-      test: /\.(png|PNG|jpg|JPG|gif|GIF)$/,
+      test: /\.(png|PNG|jpg|JPG|gif|GIF|)$/,
       use: [
         options.defaultLoaders.babel,
         {
           loader: 'file-loader',
-          options: '' // pluginOptions.options
-          }
-        ]
-    })    
+          options: '' 
+        }
+      ]
+    });
 
     return config;
   },

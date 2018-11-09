@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
-
-const menuIconsvg = require('../../../../../static/icons/Menu.svg');
+// const menuIconsvg = require('../../../../../static/icons/Menu.svg');
+import menuIconsvg from '../../../../../static/icons/Menu.svg';
 
 const drawerToggle = (props) => (
   <Fragment>

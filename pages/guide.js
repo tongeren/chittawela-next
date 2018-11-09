@@ -1,5 +1,7 @@
+import { Fragment } from 'react';
 import withLayout from '../components/hoc/withLayout';
-import { CloudinaryContext, Image } from 'cloudinary-react';
+import withCloudinaryContext from '../components/hoc/withCloudinaryContext';
+import { Image } from 'cloudinary-react';
 
 const wiphatthra = [
   {
@@ -7,8 +9,8 @@ const wiphatthra = [
   }
 ];
 
-export default withLayout(() => (
-  <CloudinaryContext cloudName="chittawela">
+export default withLayout(withCloudinaryContext(() => (
+  <Fragment>
     <div className={"Main"}>
       <div>
         <Image 
@@ -40,5 +42,5 @@ export default withLayout(() => (
       }
     `}
     </style>  
-  </CloudinaryContext>
-));
+  </Fragment>
+)));

@@ -10,7 +10,9 @@
     "start": "next start -p $PORT",
     "heroku-postbuild": "next build"
   },
-  "keywords": ["Next.js"],
+  "keywords": [
+    "Next.js"
+  ],
   "author": "Duncan van Tongeren",
   "license": "GNU LGPL",
   "repository": {
@@ -20,16 +22,15 @@
   "dependencies": {
     "cloudinary-react": "^1.0.6",
     "next": "^7.0.2",
-    "next-assets-import": "0.0.2",
     "next-compose-plugins": "^2.1.1",
     "next-images": "^1.0.1",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
-    "styled-jsx": "^3.1.0",
-    "tunnel-agent": "^0.6.0"
+    "styled-jsx": "^3.1.0"
   },
   "devDependencies": {
-    "file-loader": "^2.0.0"
+    "file-loader": "^2.0.0",
+    "url-loader": "^1.1.2"
   },
   "engines": {
     "node": "11.0.0",

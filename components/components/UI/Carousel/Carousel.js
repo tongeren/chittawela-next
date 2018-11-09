@@ -1,5 +1,6 @@
 import { Component, Fragment } from 'react';
-import { CloudinaryContext } from 'cloudinary-react';
+// import { CloudinaryContext } from 'cloudinary-react';
+import withCloudinaryContext from '../../../hoc/withCloudinaryContext';
 import Arrow from './Arrow/Arrow';
 import ImageSlide from './ImageSlide/ImageSlide';
 
@@ -60,7 +61,7 @@ class Carousel extends Component {
     render () {
         return (
             <Fragment>
-                <CloudinaryContext cloudName="chittawela">
+                {/* <CloudinaryContext cloudName="chittawela"> */}
                     <div className={"Carousel"}>
                         <div className={"ArrowLeft"}> 
                             <Arrow 
@@ -80,7 +81,7 @@ class Carousel extends Component {
                                 glyph={GLYPH_RIGHT} /> 
                         </div>    
                     </div>   
-                </CloudinaryContext>
+                {/* </CloudinaryContext> */}
                 <style jsx>{`
                     .Carousel {
 	                    display: flex;
@@ -110,5 +111,5 @@ class Carousel extends Component {
     }
 }
 
-export default Carousel;
+export default withCloudinaryContext(Carousel);
 
