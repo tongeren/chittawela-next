@@ -1,27 +1,11 @@
 import { Fragment } from 'react';
-import { CloudinaryContext, Image } from 'cloudinary-react';
-// import backGround from '../../../../static/images/Banburee/IMG_8560.JPG';
-
-const backGroundImage = {
-        publicId: "Banburee/IMG_8560.JPG"
-};
+import BannerImage from './BannerImage/BannerImage';
 
 const banner = (props) => (
-    <Fragment>    
-    <CloudinaryContext cloudName="chittawela">    
+    <Fragment>     
         <div className={"Banner"}>
             {/* <img className={["Image", "Animation"].join(' ')} src={backGround} alt="Background"/> */}
-            <Image 
-                publicId={ backGroundImage.publicId } 
-                style={{   
-                    filter: 'opacity(100%)', 
-                    height: '94vh', 
-                    animationName: 'sharpen',
-                    animationDelay: '0s',
-                    animationDuration: '2.5s',
-                    animationTimingFunction: 'ease-out', 
-                    animationFillMode: 'both',
-                }} />  
+            <BannerImage />
             <div className={"Content"}>
                 {props.children}
             </div> 
@@ -73,8 +57,7 @@ const banner = (props) => (
                 100% { filter: opacity(100%); }
             }
         `}    
-        </style>
-    </CloudinaryContext>    
+        </style>   
     </Fragment>
 );
 
