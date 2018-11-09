@@ -2,7 +2,6 @@ import { Component, Fragment } from 'react';
 import Toolbar from '../components/components/navigation/Toolbar/Toolbar';
 import SideDrawer from '../components/components/navigation/SideDrawer/SideDrawer';
 import Footer from '../components/containers/Footer/Footer';
-// import SEO from '../../marketing/SEO/SEO';
 import NormalizeCss from './NormalizeCss';
 import TrueGlobalCss from './TrueGlobalCss';
 
@@ -24,7 +23,6 @@ class Layout extends Component {
   render () {
     return (
       <Fragment>
-        {/* <SEO /> */}
         <Toolbar drawerToggleClicked={this.sideDrawerToggledHandler}/>
         <SideDrawer open={this.state.showSideDrawer} closed={this.sideDrawerClosedHandler} /> 
         <main className={"Main"}>
