@@ -1,11 +1,10 @@
 import { Fragment } from 'react';
-import BannerImage from './BannerImage/BannerImage';
+import StyledCloudinaryImage from '../StyledCloudinaryImage/StyledCloudinaryImage';
 
 const banner = (props) => (
     <Fragment>     
         <div className={"Banner"}>
-            {/* <img className={["Image", "Animation"].join(' ')} src={backGround} alt="Background"/> */}
-            <BannerImage />
+            <StyledCloudinaryImage publicId={ props.publicId } style={{ height: '94vh' }} />
             <div className={"Content"}>
                 {props.children}
             </div> 

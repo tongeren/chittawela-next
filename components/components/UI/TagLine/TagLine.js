@@ -1,11 +1,8 @@
 import { Fragment } from 'react';
-// import classes from './TagLine.module.css';
 
-const TAGLINE = "Now is Time to Soothe Your Soul";
-
-const tagLine = () => (
+const tagLine = (props) => (
     <Fragment>
-        <p className={"Tagline"}>{TAGLINE}</p>  
+        <p className={"Tagline"}>{ props.text }</p>  
         <style jsx>{`
             .Tagline {
                 text-align: center;

@@ -1,20 +1,15 @@
-import { Image } from 'cloudinary-react';
-import withCloudinaryContext from '../../../hoc/withCloudinaryContext';
+import StyledCloudinaryImage from '../StyledCloudinaryImage/StyledCloudinaryImage';
 
-const chittawelaLogo = {
-    publicId: 'Logos/chittawela_colour_text_under.png'
-};
-
-const bigLogo = () => (
-    <Image 
-        publicId = { chittawelaLogo.publicId } 
+const bigLogo = (props) => (
+    <StyledCloudinaryImage 
+        publicId={ props.publicId } 
         style={{ 
             maxWidth: '80%', 
             alignSelf: 'center',
-            maxHeight: '64vh', /* 100-6-20=74 Toolbar=6vh Banner=94vh Logo=20vh*/
+            maxHeight: '64vh', 
             zIndex: '0'
         }} />
 );
 
-export default withCloudinaryContext(bigLogo);
+export default bigLogo;
 
