@@ -28,7 +28,7 @@ const sideDrawer = (props) => {
           background-color: white;
           padding: 16vw 8vw;
           box-sizing: border-box;
-          transition: transform 0.3s ease-out;
+          transition: transform 0.3s ease-out; /* Goodui.org: Try Transitions instead of showing changes instantly. Transition time <0.5s */
         }
   
         .Open {

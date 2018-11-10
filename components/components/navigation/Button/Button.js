@@ -1,12 +1,10 @@
 import { Fragment } from 'react';
 import Link from 'next/link';
 
-const buttonText = "RESERVE MY SPOT!";
-
 const button = (props) => (
   <Fragment>
     <Link href="/checkout">
-      <button onClick={props.clicked} className={"Button"}>{buttonText}</button>
+      <button onClick={props.clicked} className={"Button"}>{props.text}</button>
     </Link>
     <style jsx>{`
       .Button {
