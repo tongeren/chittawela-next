@@ -1,3 +1,6 @@
+// ES6 import using esm
+import { routes } from './components/routes/Routes';  
+
 const express = require('express');
 const next = require('next');
 const favicon = require('serve-favicon');
@@ -14,6 +17,17 @@ server.use(favicon(path.join(__dirname, '', 'favicon.ico')));
 
 app.prepare()
     .then(() => {
+
+        routes.forEach( (route) => {
+            let page = route.path;
+            if (page === '/') {
+                page="/index";
+            }  
+
+            server.get(route.path, (req, res) => {
+                app.render(req, res, page);
+            });
+        });
 
         server.get('*', (req, res) => {
             return handle(req, res);

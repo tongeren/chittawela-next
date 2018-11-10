@@ -5,9 +5,9 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "dev": "node server.js",
+    "dev": "node -r esm server.js",
     "build": "next build",
-    "start": "NODE_ENV=production node server.js",
+    "start": "NODE_ENV=production node -r esm server.js",
     "heroku-postbuild": "next build"
   },
   "keywords": [
@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "cloudinary-react": "^1.0.6",
+    "esm": "^3.0.84",
     "express": "^4.16.4",
     "next": "^7.0.2",
     "next-compose-plugins": "^2.1.1",
