@@ -1,5 +1,4 @@
 import { Fragment } from 'react';
-// import classes from './SideDrawer.module.css';
 import Backdrop from '../../UI/Backdrop/Backdrop';
 import NavigationItems from '../NavigationItems/NavigationItems';
 
