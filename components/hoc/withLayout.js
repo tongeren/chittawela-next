@@ -5,3 +5,4 @@ export default (Component) => (props) => (
         <Component {...props}/>
     </Layout>
 );
+

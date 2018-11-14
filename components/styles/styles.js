@@ -1,18 +1,19 @@
 import { createMuiTheme } from '@material-ui/core/styles';
+import { whitesmoke, black, turquoise, rosegold, gold, champagne } from './colors';
 
 const chittawelaTheme = createMuiTheme({
     palette: {
         default: {
-            main: '#ffffff', /* black */
+            main: whitesmoke
         },
         primary: {
-            main: '#f5f5f5', /* whitesmoke */
+            main: black
         },
         secondary: {
-            main: '#8f7a49', /* gold */
+            main: gold
         },
         error: {
-            main: '#585346',
+            main: rosegold
         }
     }, 
     // Migrate to Typography 2
@@ -22,10 +23,3 @@ const chittawelaTheme = createMuiTheme({
 });
 
 export default chittawelaTheme;
-
-/*
-black #ffffff
-gold #8f7a49
-whitesmoke 
-#585346
-*/
