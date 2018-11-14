@@ -2,12 +2,12 @@ import { Slide } from 'material-auto-rotating-carousel';
 import { withStyles } from '@material-ui/core';
 
 const slideStyles = {
-    media: {
-        objectFit: 'cover',
-        objectPosition: 'center',
+    root: {
+        borderRadius: '0px',
         overflow: 'hidden'
     }    
 };
 
-export default withStyles(slideStyles)( props => <Slide {...props}/> );
+export default withStyles(slideStyles)(props => <Slide {...props}/>);
 
+ 
