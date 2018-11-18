@@ -5,15 +5,12 @@ import withLayout from '../components/hoc/withLayout';
 // import StyledCloudinaryImage from '../components/components/UI/StyledCloudinaryImage/StyledCloudinaryImage';
 // import StyledSlide from '../components/styles/StyledSlide/StyledSlide';
 // import { Image } from 'cloudinary-react';
-import Button from '@material-ui/core/Button';
+// import Button from '@material-ui/core/Button';
 
-const index = (props) => {
-        return(  
-            <div style={{ position: 'relative', width: '100%' }}>
-                {/* <Button>{"Test"}</Button> */}
-                <ChittawelaCarousel />
-            </div>    
-        );
+const index = () => {
+    return(  
+        <ChittawelaCarousel />    
+    );
 };
 
 export default withLayout(index);
