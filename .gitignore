@@ -15,5 +15,11 @@ build/
 .DS_Store
 .env.production
 npm-debug.log*
-TODO.md
+
+# notes
+
 ERRORS.md
+IDENTITY.md
+MARKETING.md
+SERVICES.md
+TODO.md
