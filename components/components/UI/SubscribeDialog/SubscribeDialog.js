@@ -7,23 +7,62 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 
+import { subscribeToNewsletter } from '../../../../lib/api/public'; /* client side API method */
+import { isValidEmailAddress, isValidName } from '../../../validation/validation';
+
 const dialogTitleText = "Please tell me more!";
 const subscribeDialogText = "Yes! I want to change my life and live from the heart!";
 const fullNameInputFieldText = "Your Name";
 const emailAddressInputFieldText = "Your Email Address";
 
+const presetName = "Duncan van Tongeren";
+const presetEmailAddress = "dpvantongeren@gmail.com";
+
 export default class SubscribeDialog extends Component {
     state = {
-        dialogOpen: this.props.show
+        dialogOpen: this.props.show,
+        user: {
+            name: presetName,
+            email: presetEmailAddress
+        }
+    };
+
+    cancelButtonClickedHandler = () => {
+        this.handleClose();
+    }
+
+    subscribeButtonClickedHandler = async (event) => {        
+        if (!this.isValidSubscriptionInfo()) { return; };
+
+        event.preventDefault();
+
+        try {
+            const user = this.state.user;
+            await subscribeToNewsletter({ user });
+        } 
+        catch (err) {
+            console.log(err); 
+        }
+        
+        console.log("Subscribed!");
+        this.handleClose();
     };
 
     handleClose = () => {
-        console.log("handleClose");
-        console.log("Subscribe to MailChimp");
+        // Close the dialog
         this.setState({ dialogOpen: false });
         this.props.closeDialog();
     };
   
+    isValidSubscriptionInfo = () => {
+        const isName = isValidName(this.state.user.name);
+        const isEmail = isValidEmailAddress(this.state.user.email);
+
+        const isValid = isName && isEmail;
+        
+        return isValid;
+    };
+
     render() {
         let subscribeDialogJSX =
             <div>
@@ -40,28 +79,41 @@ export default class SubscribeDialog extends Component {
                         </DialogContentText>
                         <TextField
                             autoFocus
+                            error={ !isValidName(this.state.user.name) }
                             margin="dense"
                             id="name"
                             label={ fullNameInputFieldText }
-                            type="email"
+                            onChange={ (event) => this.setState({ user: { ...this.state.user, name: event.target.value.trim() }}) }
+                            type="text" /* HTML5 input type */
                             fullWidth
                             variant="outlined"
+                            value={ this.state.user.name }
                         />
                         <TextField
                             autoFocus
+                            error={ !isValidEmailAddress(this.state.user.email) }
                             margin="dense"
                             id="name"
                             label={ emailAddressInputFieldText }
-                            type="email"
+                            onChange={ (event) => this.setState({ user: { ...this.state.user, email: event.target.value.trim() }}) }
+                            type="email" /* HTML5 input type */
                             fullWidth
                             variant="outlined"
+                            value={ this.state.user.email }
                         />
                     </DialogContent>
                 <DialogActions>
-                    <Button onClick={this.handleClose} color="secondary">
+                    <Button 
+                        onClick={this.cancelButtonClickedHandler} 
+                        color="secondary" 
+                        autoFocus={!this.isValidSubscriptionInfo()} >
                         Cancel
                     </Button>
-                    <Button onClick={this.handleClose} color="secondary">
+                    <Button 
+                        onClick={this.subscribeButtonClickedHandler} 
+                        color="secondary" 
+                        autoFocus={this.isValidSubscriptionInfo()}
+                        disabled={!this.isValidSubscriptionInfo()} >
                         Subscribe
                     </Button>
                 </DialogActions>
@@ -69,7 +121,5 @@ export default class SubscribeDialog extends Component {
         </div>;
     
         return ( (this.props.show && this.state.dialogOpen) ? subscribeDialogJSX : null );
-        // return (this.state.dialogOpen ? subscribeDialogJSX : null );
-        // return subscribeDialogJSX;
     }    
 }

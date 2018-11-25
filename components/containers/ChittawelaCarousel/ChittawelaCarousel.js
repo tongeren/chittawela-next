@@ -6,6 +6,7 @@ import StyledSlide from '../../styles/StyledSlide/StyledSlide';
 import { Image } from 'cloudinary-react';
 import SubscribeDialog from '../../components/UI/SubscribeDialog/SubscribeDialog';
 
+
 const slideTitle = "Now is Time to Soothe Your Soul";
 const slideSubTitle = "Gain peace from within" ;
 // const mediaBackGroundStyles = { backgroundColor: whitesmoke };
@@ -60,35 +61,25 @@ const styles = {
 };
 
 class ChittawelaCarousel extends Component {
-    // constructor() {
-    //    super();
-    //    this.handleCloseBySubscribeDialogHandler = this.handleCloseBySubscribeDialogHandler.bind(this);
-    //};
-
     state = {
         startButtonClicked: false
     };
 
     handleStartButtonClickedHandler = () => {
-        // console.log("handleStartButtonClickedHandler");
         this.setState({ startButtonClicked: true});
     };
 
     handleCloseBySubscribeDialogHandler = () => {
-        // console.log("handleCloseBySubscribeDialogHandler");
-        // console.log("Reset ChittawelaCarousel's state");
-        this.setState({ startButtonClicked: false});
+        this.setState(() => ({ startButtonClicked: false})); // binding this
     };
 
     render() {
         const { classes } = this.props;
-        
-        console.log("Rendering ChittawelaCarousel:", this.state.startButtonClicked);
 
         return(  
             <Fragment>
                 <AutoRotatingCarousel 
-                    autoplay={ true }
+                    autoplay={ !this.state.startButtonClicked } /* only autoplay when the subscribe dialog is not open */
                     hideArrows={ false }
                     interval={ 8000 } /* interval should be in the range of 8-10s */
                     open 
@@ -104,10 +95,9 @@ class ChittawelaCarousel extends Component {
                             { ...slide } />
                     ))}
                 </AutoRotatingCarousel> 
-                {/*  this.state.startButtonClicked ? <SubscribeDialog show /> : null */}
                 { this.state.startButtonClicked ? 
                     <SubscribeDialog 
-                        show={ true } 
+                        show
                         closeDialog={ this.handleCloseBySubscribeDialogHandler } 
                     /> 
                 : null }

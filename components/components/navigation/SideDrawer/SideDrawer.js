@@ -23,7 +23,7 @@ const sideDrawer = (props) => {
           height: 100%;
           left: 0;
           top: 0;
-          z-index: 200;
+          z-index: 100000;
           background-color: white;
           padding: 16vw 8vw;
           box-sizing: border-box;

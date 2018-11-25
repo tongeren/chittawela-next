@@ -1,11 +1,5 @@
 import ChittawelaCarousel from '../components/containers/ChittawelaCarousel/ChittawelaCarousel';
-// import { whitesmoke, black, turquoise, rosegold, gold, champagne } from '../components/styles/colors';
 import withLayout from '../components/hoc/withLayout';
-// import { withStyles } from '@material-ui/core/styles';
-// import StyledCloudinaryImage from '../components/components/UI/StyledCloudinaryImage/StyledCloudinaryImage';
-// import StyledSlide from '../components/styles/StyledSlide/StyledSlide';
-// import { Image } from 'cloudinary-react';
-// import Button from '@material-ui/core/Button';
 
 const index = () => {
     return(  
