@@ -4,6 +4,7 @@ import express from 'express';
 import next from 'next';
 import favicon from 'serve-favicon';
 import path from 'path';
+import morgan from 'morgan';
 
 import { addSingleSubscriberToList } from './mailchimp';
 import expressRoutesApis from '../lib/api/api.config';
@@ -18,22 +19,31 @@ const ROOT_URL = dev ? `http://localhost:${port}` : appUrl;
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
+const _favicon = favicon(path.join(__dirname, '', 'favicon.ico'));
+
+// See https://github.com/expressjs/morgan#predefined-formats
+const morganFormat = 'dev';
+const skipNonErrorMessages = { skip: (req, res) => { return res.statusCode < 400 } };
+
 app.prepare()
     .then(() => {
         const server = express();
         
+        // Set up the logger middleware
+        server.use(morgan(morganFormat, skipNonErrorMessages));
+
         // Add favicon
         // See https://github.com/expressjs/serve-favicon
-        server.use(favicon(path.join(__dirname, '', 'favicon.ico')));
+        server.use(_favicon)
 
         server.use(express.json());
 
-        server.post(expressRouteMailchimp, async (req, res) => {
+        // APIs
+        server.post(expressRouteMailchimp, async (req, res) => {    
             const { user } = req.body;
 
             try {
                 await addSingleSubscriberToList({ user });
-                res.json({ subscribed: 1 });
             } catch (err) {
               res.json({ error: err.message || err.toString() });
             }

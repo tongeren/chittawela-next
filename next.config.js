@@ -28,26 +28,24 @@ const webpackConfig = {
   },
 };
 
-// Next.js environment configuration
-// See: https://zeit.co/blog/next5-1#environment-configuration
 
-// Use dotenv to read .env vars into Node
-require('dotenv').config();
+/*
+const { parsed: localEnv } = require('dotenv').config()
+const webpack = require('webpack')
 
-const environmentConfig = {
-  serverRuntimeConfig: { // Will only be available on the server side
-    MAILCHIMP_API_KEY: process.env.MAILCHIMP_API_KEY,
-    MAILCHIMP_DATA_CENTER: process.env.MAILCHIMP_DATA_CENTER,
-    MAILCHIMP_API_VERSION: process.env.MAILCHIMP_API_VERSION,
-    MAILCHIMP_MEMBERS_LIST_ID: process.env.MAILCHIMP_MEMBERS_LIST_ID,
-  },
-  publicRuntimeConfig: { // Will be available on both server and client
-    
+const webpackConfig = {
+  webpack: (config, { buildId, dev, isServer, defaultLoaders }) => {
+    config.plugins.push(
+      new webpack.EnvironmentPlugin(localEnv)
+    )
+    if (!isServer) {
+      config.externals.push(fs);
+    }
+
+    return config;
   }
 };
-
-// Merge configurations
-const nextConfig = Object.assign({}, webpackConfig, environmentConfig);
+*/
 
 /* See https://github.com/cyrilwanner/next-compose-plugins#nextconfiguration */
 module.exports = withPlugins(
@@ -58,5 +56,5 @@ module.exports = withPlugins(
   
     // your other plugins here
 
-  ], nextConfig
+  ], webpackConfig
 );

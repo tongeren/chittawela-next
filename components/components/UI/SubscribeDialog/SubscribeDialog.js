@@ -16,7 +16,7 @@ const fullNameInputFieldText = "Your Name";
 const emailAddressInputFieldText = "Your Email Address";
 
 const presetName = "Duncan van Tongeren";
-const presetEmailAddress = "dpvantongeren@gmail.com";
+const presetEmailAddress = "isarastudio@gmail.com";
 
 export default class SubscribeDialog extends Component {
     state = {
@@ -37,14 +37,21 @@ export default class SubscribeDialog extends Component {
         event.preventDefault();
 
         try {
-            const user = this.state.user;
+            const name = this.state.user.name;
+            const first = name.split(" ")[0];
+            const last = name.slice(first.length + 1, name.length);
+            const user = {
+                firstName: first,
+                lastName: last,
+                email: this.state.user.email
+            };
+
             await subscribeToNewsletter({ user });
         } 
         catch (err) {
             console.log(err); 
         }
         
-        console.log("Subscribed!");
         this.handleClose();
     };
 
