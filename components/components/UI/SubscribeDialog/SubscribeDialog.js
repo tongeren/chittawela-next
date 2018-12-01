@@ -17,6 +17,7 @@ const emailAddressInputFieldText = "Your Email Address";
 
 const presetName = "Duncan van Tongeren";
 const presetEmailAddress = "isarastudio@gmail.com";
+const testWithoutSubscribing = true;
 
 export default class SubscribeDialog extends Component {
     state = {
@@ -46,19 +47,24 @@ export default class SubscribeDialog extends Component {
                 email: this.state.user.email
             };
 
-            await subscribeToNewsletter({ user });
+            if (!testWithoutSubscribing) {
+                await subscribeToNewsletter({ user });
+            };    
         } 
         catch (err) {
             console.log(err); 
         }
         
         this.handleClose();
+
+        // Open the Confirmation dialog
+        this.props.openConfirmationDialog();
     };
 
     handleClose = () => {
-        // Close the dialog
+        // Close the Subscribe dialog
         this.setState({ dialogOpen: false });
-        this.props.closeDialog();
+        this.props.closeSubscribeDialog();
     };
   
     isValidSubscriptionInfo = () => {

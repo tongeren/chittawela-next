@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import StyledSlide from '../../styles/StyledSlide/StyledSlide';
 import { Image } from 'cloudinary-react';
 import SubscribeDialog from '../../components/UI/SubscribeDialog/SubscribeDialog';
-
+import ConfirmationDialog from '../../components/UI/ConfirmationDialog/ConfirmationDialog';
 
 const slideTitle = "Now is Time to Soothe Your Soul";
 const slideSubTitle = "Gain peace from within" ;
@@ -62,15 +62,24 @@ const styles = {
 
 class ChittawelaCarousel extends Component {
     state = {
-        startButtonClicked: false
+        startButtonClicked: false,
+        showConfirmationDialog: false
     };
 
-    handleStartButtonClickedHandler = () => {
+    startButtonClickedHandler = () => {
         this.setState({ startButtonClicked: true});
     };
 
-    handleCloseBySubscribeDialogHandler = () => {
+    closeBySubscribeDialogHandler = () => {
         this.setState(() => ({ startButtonClicked: false})); // binding this
+    };
+
+    mailchimpSubscribeHandler = () => {
+        this.setState({ showConfirmationDialog: true });
+    };
+
+    closeConfirmationDialogHandler = () => {
+        this.setState({ showConfirmationDialog: false });
     };
 
     render() {
@@ -85,7 +94,7 @@ class ChittawelaCarousel extends Component {
                     open 
                     label={ subscribeButtonLabel }
                     mobile 
-                    onStart = { () => this.handleStartButtonClickedHandler() } /* MailChimp subscription */
+                    onStart = { () => this.startButtonClickedHandler() } /* MailChimp subscription */
                     ModalProps={{ BackdropProps: {classes: { root: classes.BackdropProps} } }} 
                     classes={{ root: classes.root, carouselWrapper: classes.carouselWrapper }}>
                     { chittawelaSlides.map((slide, i) => (
@@ -98,9 +107,17 @@ class ChittawelaCarousel extends Component {
                 { this.state.startButtonClicked ? 
                     <SubscribeDialog 
                         show
-                        closeDialog={ this.handleCloseBySubscribeDialogHandler } 
+                        closeSubscribeDialog={ this.closeBySubscribeDialogHandler } 
+                        openConfirmationDialog={ this.mailchimpSubscribeHandler }
                     /> 
                 : null }
+                { this.state.showConfirmationDialog ? 
+                    <ConfirmationDialog 
+                        show 
+                        openConfirmationDialog={ this.mailchimpSubscribeHandler }
+                        closeConfirmationDialog={ this.closeConfirmationDialogHandler }
+                    />
+                : null }        
             </Fragment>
         );
     }    

@@ -10,43 +10,41 @@ import withMobileDialog from '@material-ui/core/withMobileDialog';
 
 class ConfirmationDialog extends React.Component {
   state = {
-    open: false,
-  };
-
-  handleClickOpen = () => {
-    this.setState({ open: true });
+    dialogOpen: this.props.show,
   };
 
   handleClose = () => {
-    this.setState({ open: false });
+    // Close the Confirmation dialog
+    this.setState({ dialogOpen: false });
+    this.props.closeConfirmationDialog();
   };
 
   render() {
     const { fullScreen } = this.props;
 
-    return (
+    let confirmationDialogJSX =
       <div>
-        <Button onClick={this.handleClickOpen}>Open responsive dialog</Button>
         <Dialog
-          fullScreen={fullScreen}
-          open={this.state.open}
+          open={this.props.show}
           onClose={this.handleClose}
           aria-labelledby="responsive-dialog-title"
         >
-          <DialogTitle id="responsive-dialog-title">{"Use Google's location service?"}</DialogTitle>
+          <DialogTitle id="responsive-dialog-title">{"Thank you!"}</DialogTitle>
           <DialogContent>
             <DialogContentText>
                 You succesfully subscribed to Chittawela's mailing list. We will keep in touch! 
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleClose} color="primary" autoFocus>
+            <Button onClick={this.handleClose} color="secondary" autoFocus>
                 Close
             </Button>
           </DialogActions>
         </Dialog>
-      </div>
-    );
+      </div>;
+     
+    return ( (this.props.show && this.state.dialogOpen) ? confirmationDialogJSX : null );
+    
   }
 }
 
