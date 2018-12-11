@@ -1,4 +1,6 @@
+import Checkout from '../components/components/UI/Checkout/Checkout';
+
 export default () => (
-    <p>"IMPLEMENT CHECKOUT..."</p>
+    <Checkout />
 );
 

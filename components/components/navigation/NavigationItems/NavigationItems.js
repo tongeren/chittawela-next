@@ -5,8 +5,8 @@ import { routes } from '../../../routes/Routes';
 
 const navigationItems = (props) => (
   <Fragment>
-    <ul className={"NavigationItems"} >
-      { routes.map((route, i) => (<NavigationItem key={i} clicked={props.clicked} {...route}>{route.navText}</NavigationItem>)) } 
+      <ul className={"NavigationItems"} >
+          { routes.map((route, i) => ( route.show ? <NavigationItem key={i} clicked={props.clicked} {...route}>{route.navText}</NavigationItem> : null)) } 
     </ul>
     <style jsx>{`
       .NavigationItems {

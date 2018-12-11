@@ -13,12 +13,16 @@ const styles = theme => ({
   },
 });
 
-const button = (props) => (
-  <Fragment>
-    <Link href="/checkout">
-      <Button variant="contained" color="secondary" onClick={props.clicked}>{props.text}</Button>
-    </Link>
-  </Fragment>
-);
+const button = (props) => {
+  const { link, variant, color, clicked, text } = props;
+
+  return(
+    <Fragment>
+      <Link href={link}>
+        <Button variant={variant} color={color} onClick={clicked}>{text}</Button>
+      </Link>
+    </Fragment>
+  );
+};
 
 export default withStyles(styles)(button);

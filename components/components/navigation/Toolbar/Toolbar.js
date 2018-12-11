@@ -7,6 +7,7 @@ import Button from '../Button/Button';
 import DrawerToggle from '../SideDrawer/DrawerToggle/DrawerToggle';
 
 const buttonText = "RESERVE MY SPOT!"; // Goodui.org: Try Benefit Buttons instead of just task based ones.
+const buttonLink = "/package";
 const iconExplanation = "MENU"; // Goodui.org: Try Icon Labels instead of opening for interpretation.
 
 const styles = {
@@ -29,10 +30,10 @@ const toolbar = (props) => {
       <AppBar position="static">
         <Toolbar color="default">
           <DrawerToggle className={classes.menuButton} clicked={props.drawerToggleClicked}/> 
-          <Typography variant="button" color="inherit" className={classes.grow}>
+          <Typography variant="button" color="inherit" classes={{ root: classes.grow}}>
             { iconExplanation }
           </Typography>     
-          <Button text={buttonText} />     
+          <Button link={buttonLink} text={buttonText} variant="contained" color="secondary"/>     
         </Toolbar>
       </AppBar>
     </div>

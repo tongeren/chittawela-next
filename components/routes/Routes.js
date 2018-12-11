@@ -1,27 +1,44 @@
-export const routes = [
+// DO NOT include '/checkout' (must only be rendered client side: that is locally in the browser)
+export const routes = [ 
     {
         path: "/",
-        navText: "Home"
+        navText: "Home",
+        show: true
     },
     {
         path: "/explore",
-        navText: "Explore"
+        navText: "Explore",
+        show: true
     },
     {
         path: "/guide",
-        navText: "Your Guide"
+        navText: "Your Guide",
+        show: true
     },
     {
         path: "/sanctuary",
-        navText: "Your Sanctuary"
+        navText: "Your Sanctuary",
+        show: true
     },
     {
         path: "/about",
-        navText: "Chittawela"
+        navText: "Chittawela",
+        show: true
     },
     {
         path: "/contact",
-        navText: "Contact Us"
+        navText: "Contact Us",
+        show: true
+    },
+    {
+        path: "/checkout",
+        navText: "Checkout",
+        show: false
+    },
+    {
+        path: "/package",
+        navText: "Package",
+        show: false
     }
 ];
 

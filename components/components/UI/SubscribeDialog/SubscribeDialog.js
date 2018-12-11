@@ -67,6 +67,8 @@ export default class SubscribeDialog extends Component {
         this.props.closeSubscribeDialog();
     };
   
+    
+
     isValidSubscriptionInfo = () => {
         const isName = isValidName(this.state.user.name);
         const isEmail = isValidEmailAddress(this.state.user.email);
@@ -91,7 +93,6 @@ export default class SubscribeDialog extends Component {
                             { subscribeDialogText }
                         </DialogContentText>
                         <TextField
-                            autoFocus
                             error={ !isValidName(this.state.user.name) }
                             margin="dense"
                             id="name"
@@ -103,7 +104,6 @@ export default class SubscribeDialog extends Component {
                             value={ this.state.user.name }
                         />
                         <TextField
-                            autoFocus
                             error={ !isValidEmailAddress(this.state.user.email) }
                             margin="dense"
                             id="name"

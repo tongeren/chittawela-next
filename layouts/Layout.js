@@ -1,7 +1,6 @@
 import { Component, Fragment } from 'react';
 import Toolbar from '../components/components/navigation/Toolbar/Toolbar';
 import SideDrawer from '../components/components/navigation/SideDrawer/SideDrawer';
-import Footer from '../components/containers/Footer/Footer';
 import NormalizeCss from './NormalizeCss';
 import TrueGlobalCss from './TrueGlobalCss';
 
@@ -28,7 +27,6 @@ class Layout extends Component {
         <main className={"Main"}>
           {this.props.children}
         </main> 
-        <Footer />
         <NormalizeCss />
         <TrueGlobalCss />
       </Fragment>
