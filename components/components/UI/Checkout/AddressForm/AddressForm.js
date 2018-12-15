@@ -9,16 +9,15 @@ import DecoratedTextField from '../../DecoratedTextField/DecoratedTextField';
 const countries = getData();
 
 class AddressForm extends Component {
-    handleChange = event => {
-        this.props.onFormSubmit(event);
+    liftUp = (event) => {
+        // Lifted state has been checked, hence can be lifted up once more
+        this.props.onChange(event);
     };
 
     render() {
         return (
             <Fragment>
-                <Typography variant="h6" gutterBottom>
-                    Home Address
-                </Typography>
+                <Typography variant="h6" gutterBottom>{ this.props.formText.title }</Typography>
                 <Grid container spacing={24}>
                     <Grid item xs={12}>
                         <DecoratedTextField

@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import Head from 'next/head';
 
+import produce from 'immer'; // https://github.com/mweststrate/immer
+
 import withStyles from '@material-ui/core/styles/withStyles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -13,11 +15,24 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-import EmailForm from './EmailForm/EmailForm';
+import ContactForm from './ContactForm/ContactForm';
 import AddressForm from './AddressForm/AddressForm';
 import PaymentForm from './PaymentForm/PaymentForm';
 import Review from './Review/Review';
 import OmiseConfig from './omise.config';
+
+const contactFormText = {
+    title: "Contact information",
+    labelSubscribe: "Please keep me informed!"
+};
+
+const addressFormText = {
+    title: "Home Address"
+};
+
+const paymentFormText = {
+    title: ""
+};
 
 const styles = theme => ({
     appBar: {
@@ -62,53 +77,102 @@ class Checkout extends Component {
     state = {
         activeStep: 0,
         isClient: false,
+        nextAllowed: false,
         user: {
-            contact: {
-                name: '',
-                email: '',
-                subscribe: true
-            },
-            address: {
-                addressLine1: '',
-                addressLine2: '',
-                city: '',
-                zip: '',
-                country: ''
-            },
-            card: { 
-                name: '',
-                number: '',
-                expiry: '',
-                cvv: ''
-            }
+            draft: {
+                contact: {
+                    name: '',
+                    email: '',
+                    subscribe: false,
+                    checked: false,
+                    noOfUpdates: 0
+                },
+                address: {
+                    addressLine1: '',
+                    addressLine2: '',
+                    city: '',
+                    zip: '',
+                    country: '',
+                    checked: false,
+                    noOfUpdates: 0
+                },
+                card: { 
+                    name: '',
+                    number: '',
+                    expiry: '',
+                    cvv: '',
+                    checked: false,
+                    noOfUpdates: 0
+                },
+            },    
+            commit: {
+                contact: {
+                    name: '',
+                    email: '',
+                    subscribe: true,
+                    checked: false
+                },
+                address: {
+                    addressLine1: '',
+                    addressLine2: '',
+                    city: '',
+                    zip: '',
+                    country: '',
+                    checked: false
+                },
+                card: { 
+                    name: '',
+                    number: '',
+                    expiry: '',
+                    cvv: '',
+                    checked: false
+                }
+            }    
         }
     };
 
+    // This lifecycle method only gets called client side
     componentDidMount() {
-        // This lifecycle method only gets called client side
+        // Use it to restrict credit card information to the client only
         this.setState({ isClient: true });
+        console.log(this.state.user.draft.contact.email);
     };
     
-    handleFormSubmit = form => event => {
-        const isCheckBox = event.target.name === 'subscribe';
-        const isCheckBoxInEmailForm = (form === 'contact' && isCheckBox);
-        const newValue = isCheckBoxInEmailForm ? event.target.checked : event.target.value;
+    handleChange = form => event => {
+        // It is safe to call setState with a function multiple times. 
+        // Updates will be queued and later executed in the order they were called.
+
+        const label = event.target.name;
+        const isCheckbox = (label === "subscribe");
+        const value = isCheckbox ? event.target.checked : event.target.value;
         
+        console.log("event.target.name", value);
 
-        console.log("Parent:", isCheckBox);
-        console.log("form === 'contact'", form === 'contact');
-        console.log("isCheckBoxInEmailForm", isCheckBoxInEmailForm);
-        console.log("newValue=", newValue);
+        this.setState(
+            produce(immerDraft => {
+                immerDraft.user.draft[form][label] = value; // For some reason one cannot use event.target within produce...
+            }), 
+            () => {
+                // Check whether form data are now correct. Since local state has been checked if it exists we only need to check existence 
+                const { name, email } = { ...this.state.user.draft[form] };
+                const isAllDataCorrect = !(name === '' || email === ''); 
 
-        this.setState({ user: { ...this.state.user, [form]: { ...this.state.user[form], [event.target.name]: newValue }}}, 
-            () => console.log("Parent:", this.state.user.contact) 
+                if (isAllDataCorrect) {
+                    this.setState(
+                        produce(immerDraft => {
+                            // Copy draft data to commit
+                            immerDraft.user.commit = this.state.user.draft;
+                            // Increment the number of updates for the current form
+                            immerDraft.user.draft[form].noOfUpdates += 1
+                        }),
+                        () => {
+                            // Allow move to next form
+                            this.setState({ nextAllowed: true});
+                        }
+                    );
+                };
+            }    
         );
-
-    };
-
-    getState = form => prop => {
-        console.log("getState Parent:", form, prop, this.state.user[form][prop]);
-        return this.state.user[form][prop];
     };
 
     confirmHandler = () => {
@@ -171,15 +235,19 @@ class Checkout extends Component {
         });
     };
 
+    // TO DO:
+    // 1. 
     handleNext = () => {
         this.setState(state => ({
             activeStep: state.activeStep + 1,
+            nextAllowed: false
         }));
     };
 
     handleBack = () => {
         this.setState(state => ({
             activeStep: state.activeStep - 1,
+            nextAllowed: true
         }));
     };
 
@@ -189,24 +257,29 @@ class Checkout extends Component {
         });
     };
 
+    // This should go in a HOC
     getStepContent = step => {
         switch (step) {
             case 0:
-                return <EmailForm 
-                            onFormSubmit={ this.handleFormSubmit('contact') } 
-                            subscribe={ this.state.user.contact.subscribe } 
-                            getState={ this.getState('contact') } 
+                return <ContactForm 
+                            key={ this.state.user.draft.contact.noOfUpdates }
+                            formText={ contactFormText } 
+                            formData={ this.state.user.draft.contact }
+                            onChange={ this.handleChange('contact') }
                         />;
             case 1:
                 return <AddressForm 
-                            onFormSubmit={ this.handleFormSubmit('address') }
-                            getState={ this.getState('address') } 
+                            key={ this.state.user.draft.address.noOfUpdates }
+                            formText={ addressFormText } 
+                            formData={ this.state.user.draft.address }
+                            onChange={ this.handleChange('address') }
                         />;
             case 2:
                 return <PaymentForm 
-                            onFormSubmit={ this.handleFormSubmit('card') } 
-                            cardInfo = { this.state.user.card } 
-                            getState={ this.getState('card') } 
+                            key={ this.state.user.draft.card.noOfUpdates }
+                            formText={ paymentFormText } 
+                            formData={ this.state.user.draft.card }
+                            onChange={ this.handleChange('card') }
                         />;
             case 3:
                 return <Review />;    
@@ -236,7 +309,7 @@ class Checkout extends Component {
             </Fragment>;
         
         let backButtonJSX = 
-            <Button onClick={this.handleBack} className={classes.button}>
+            <Button onClick={ this.handleBack } className={ classes.button }>
                 Back
             </Button>;
         
@@ -248,8 +321,9 @@ class Checkout extends Component {
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={this.handleNext}
-                        className={classes.button}
+                        onClick={ this.handleNext }
+                        className={ classes.button }
+                        disabled={ !this.state.nextAllowed }
                     >
                         { activeStep === steps.length - 1 ? 'Place order' : 'Next' }
                     </Button>
@@ -260,19 +334,19 @@ class Checkout extends Component {
             (this.state.isClient) ?  
             <Fragment>
                 { omiseScript }
-                <AppBar position="absolute" color="primary" className={classes.appBar}>
+                <AppBar position="absolute" color="primary" className={ classes.appBar }>
                     <Toolbar>
-                        <Stepper activeStep={activeStep} className={classes.stepper}>
+                        <Stepper activeStep={ activeStep } className={ classes.stepper }>
                             { steps.map((label, i) => (
                                 <Step key={i}>
-                                    <StepLabel>{activeStep === i ? label : null }</StepLabel>
+                                    <StepLabel>{ activeStep === i ? label : null }</StepLabel>
                                 </Step>
                             )) }
                         </Stepper>
                     </Toolbar>
                 </AppBar>
-                <main className={classes.layout}>
-                    <Paper className={classes.paper}>
+                <main className={ classes.layout }>
+                    <Paper className={ classes.paper }>
                         <Fragment>
                             { activeStep === steps.length ? thankYouJSX : navigationButtonsJSX }
                         </Fragment>
@@ -289,3 +363,69 @@ Checkout.propTypes = {
 
 export default withStyles(styles)(Checkout);
 
+/*
+// 
+    handleFormSubmit = form => event => {
+        // If data input is checkbox, then get the right value 
+        const isCheckBox = event.target.name === 'subscribe';
+        const isCheckBoxInEmailForm = (form === 'contact' && isCheckBox);
+        const newValue = isCheckBoxInEmailForm ? event.target.checked : event.target.value;
+        
+        // Store validated data in state
+        this.setState({ user: { ...this.state.user, [form]: { ...this.state.user[form], [event.target.name]: newValue }}}, 
+            () => console.log("Parent:", this.state.user.contact) 
+        );
+
+        // Validated data now stored in state, allowed to go to next form, and set checked flag
+        this.setState({ 
+            nextAllowed: true , 
+            user: { ...this.state.user, [form]: { ...this.state.user[form], checked: true }}
+        });
+    };
+
+*/
+
+/*
+handleChange = form => event => {
+        const isCheckbox = (event.target.name === "subscribe");
+        
+        console.log("event.target.name", event.target.name);
+        // Set draft state
+        this.setState({ user: {...this.state.user, 
+            draft: { ...this.state.user.draft, 
+                [form]: {...this.state.user.draft[form],
+                    [event.target.name]: isCheckbox ? event.target.checked : event.target.value } 
+                }
+            }
+        },
+            // Callback
+            () => {
+                console.log("Set draft state:", this.state.user.draft[form]);
+                // Check whether form data are now correct. Since local state has been checked if it exists we only need to check existence 
+                const { name, email } = { ...this.state.user.draft[form] };
+                const isAllDataCorrect = !(name === '' || email === ''); 
+
+                console.log("name, email:", name, email);
+                console.log("isAllDataCorrect:", isAllDataCorrect);
+
+                if (isAllDataCorrect) {
+                    console.log("Inside...");
+                    // Copy draft data to commit
+                    () => this.setState({ commit: this.state.user.draft }, 
+                        // Callback: update draft data with commit data
+                        () => {
+                            console.log("this.user.commit", this.user.commit);
+                            this.setState({ draft: this.state.user.commit},
+                            // Callback: increment no of updates of form
+                            (prevState) => this.setState({ [form]: { ...this.state.user.draft[form], 
+                                noOfUpdates: prevState.user.draft[form].noOfUpdates + 1 }},
+                                // Callback: allow move to next form
+                                () => this.setState({ nextAllowed: true}))
+                            )
+                        }
+                    );
+                };
+            }    
+        );    
+    };
+*/
