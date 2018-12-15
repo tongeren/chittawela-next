@@ -83,7 +83,7 @@ class Checkout extends Component {
                 contact: {
                     name: '',
                     email: '',
-                    subscribe: false,
+                    subscribe: true, // Subscribe per default: let user opt out
                     checked: false,
                     noOfUpdates: 0
                 },
@@ -135,18 +135,12 @@ class Checkout extends Component {
     componentDidMount() {
         // Use it to restrict credit card information to the client only
         this.setState({ isClient: true });
-        console.log(this.state.user.draft.contact.email);
     };
     
     handleChange = form => event => {
-        // It is safe to call setState with a function multiple times. 
-        // Updates will be queued and later executed in the order they were called.
-
         const label = event.target.name;
         const isCheckbox = (label === "subscribe");
         const value = isCheckbox ? event.target.checked : event.target.value;
-        
-        console.log("event.target.name", value);
 
         this.setState(
             produce(immerDraft => {

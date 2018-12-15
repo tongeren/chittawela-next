@@ -1,35 +1,28 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import DecoratedTextField from '../../../DecoratedTextField/DecoratedTextField';   
+import UncontrolledInput from '../../../UncontrolledInput/UncontrolledInput';
 import { isValidEmailAddress } from '../../../../../validation/validation';
 
 // Fully uncontrolled component with key
 class EmailInput extends Component {
-    // Load and store draft state
-    state = {
-        value: this.props.defaultValue
-    };
 
-    handleChange = event => {
-        // Change local state 
-        this.setState({ value: event.target.value });
-
-        // Whenever error status is false, also lift state up 
-        const isValid = isValidEmailAddress(this.state.value);
-        if (isValid) { this.props.onChange(event) };
+    liftUp = (event) => {
+        // Lifted state has been checked, hence can be lifted up once more
+        this.props.onChange(event);
     };
 
     render() {
         return (
-            <DecoratedTextField
+            <UncontrolledInput
                 required
                 name="email"
                 label="E-mail Address"
+                autoComplete="email"
                 fullWidth
-                onChange={ event => this.handleChange(event) }
-                error={ !isValidEmailAddress(this.state.value) }
-                defaultValue={ this.state.value }
+                onChange={ this.liftUp } 
+                validator={ value => isValidEmailAddress(value) }
+                defaultValue={ this.props.defaultValue }
             />
         );
     };

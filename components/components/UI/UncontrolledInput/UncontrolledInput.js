@@ -1,17 +1,13 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import DecoratedTextField from '../../../DecoratedTextField/DecoratedTextField';   
+import DecoratedTextField from '../DecoratedTextField/DecoratedTextField';   
 
 // Fully uncontrolled component 
 class UncontrolledInput extends Component {
     // Load and store draft state
     state = {
         value: this.props.defaultValue
-    };
-
-    getAutoFillFieldName = () => {
-        return this.props.autoComplete ? this.props.autoComplete : null;
     };
 
     isError = (value) => {
@@ -29,13 +25,12 @@ class UncontrolledInput extends Component {
     };
 
     render() {
+        // Remove 'validator' prop which is not allowed on DOM node
+        const { validator, ...allowedProps } = this.props;
+
         return (
             <DecoratedTextField
-                required
-                name={ this.props.name }
-                label={ this.props.label }
-                fullWidth
-                autoComplete={ this.getAutoFillFieldName() }
+                { ...allowedProps }
                 onChange={ event => this.handleChange(event) }
                 error={ this.isError(this.state.value) }
                 defaultValue={ this.state.value }
@@ -44,9 +39,11 @@ class UncontrolledInput extends Component {
     };
 };
 
-NameInput.propTypes = {
+UncontrolledInput.propTypes = {
     defaultValue: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
+    required: PropTypes.bool,
+    fullWidth: PropTypes.bool,
     name: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
     autoComplete: PropTypes.string,

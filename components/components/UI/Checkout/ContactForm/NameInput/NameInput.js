@@ -1,35 +1,27 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-
-import DecoratedTextField from '../../../DecoratedTextField/DecoratedTextField';   
+ 
+import UncontrolledInput from '../../../UncontrolledInput/UncontrolledInput';
 import { isValidName } from '../../../../../validation/validation';
 
-// Fully uncontrolled component 
 class NameInput extends Component {
-    // Load and store draft state
-    state = {
-        value: this.props.defaultValue
-    };
 
-    handleChange = event => {
-        // Change local state 
-        this.setState({ value: event.target.value });
-
-        // Whenever error status is false, also lift state up 
-        const isValid = isValidName(this.state.value);
-        if (isValid) { this.props.onChange(event) };
+    liftUp = (event) => {
+        // Lifted state has been checked, hence can be lifted up once more
+        this.props.onChange(event);
     };
 
     render() {
         return (
-            <DecoratedTextField
-                required
-                name="name"
+            <UncontrolledInput 
+                required 
+                name="name" 
                 label="Name"
+                autoComplete="name"
                 fullWidth
-                onChange={ event => this.handleChange(event) }
-                error={ !isValidName(this.state.value) }
-                defaultValue={ this.state.value }
+                onChange={ this.liftUp } 
+                validator={ value => isValidName(value) }
+                defaultValue={ this.props.defaultValue }
             />
         );
     };
@@ -41,3 +33,4 @@ NameInput.propTypes = {
 };
 
 export default NameInput;
+
