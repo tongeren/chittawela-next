@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import DecoratedTextField from '../DecoratedTextField/DecoratedTextField';   
+import DecoratedTextField from '../../DecoratedTextField/DecoratedTextField';   
 
 // Fully uncontrolled component 
 class UncontrolledInput extends Component {

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 
-import UncontrolledInput from '../../../UncontrolledInput/UncontrolledInput';
-import { isValidEmailAddress } from '../../../../../validation/validation';
+import UncontrolledInput from '../UncontrolledInput/UncontrolledInput';
+import { isValidEmailAddress } from '../../../../validation/validation';
 
 const emailInput = props => (
     <UncontrolledInput

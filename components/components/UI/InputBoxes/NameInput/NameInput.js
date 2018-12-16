@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
  
-import UncontrolledInput from '../../../UncontrolledInput/UncontrolledInput';
-import { isValidName } from '../../../../../validation/validation';
+import UncontrolledInput from '../UncontrolledInput/UncontrolledInput';
+import { isValidName } from '../../../../validation/validation';
 
 const nameInput = props => (
     <UncontrolledInput 

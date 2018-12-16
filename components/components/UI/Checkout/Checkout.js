@@ -15,9 +15,9 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-import ContactForm from './ContactForm/ContactForm';
-import AddressForm from './AddressForm/AddressForm';
-import PaymentForm from './PaymentForm/PaymentForm';
+import ContactForm from '../Forms/ContactForm/ContactForm';
+import AddressForm from '../Forms/AddressForm/AddressForm';
+import PaymentForm from '../Forms/PaymentForm/PaymentForm';
 import Review from './Review/Review';
 import OmiseConfig from './omise.config';
 

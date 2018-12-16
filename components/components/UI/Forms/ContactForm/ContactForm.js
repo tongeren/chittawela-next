@@ -5,8 +5,8 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import NameInput from './NameInput/NameInput';
-import EmailInput from './EmailInput/EmailInput';
+import NameInput from '../../InputBoxes/NameInput/NameInput';
+import EmailInput from '../../InputBoxes/EmailInput/EmailInput';
 import SubscribeCheckbox from './SubscribeCheckbox/SubscribeCheckbox';
 
 const contactForm = props => (
