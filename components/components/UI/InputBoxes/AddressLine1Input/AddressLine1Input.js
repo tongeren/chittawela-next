@@ -1,27 +1,25 @@
 import PropTypes from 'prop-types';
 
 import UncontrolledInput from '../UncontrolledInput/UncontrolledInput';
-import { isValidEmailAddress } from '../../../../validation/validation';
 
-const emailInput = props => (
+const addressLine1Input = props => (
     <UncontrolledInput
         required
-        name="email"
-        label="E-mail Address"
-        autoComplete="email"
+        id="address1"
+        name="addressLine1"
+        label="Address line 1"
         fullWidth
+        autoComplete="billing address-line-1"
         onChange={ event => props.onChange(event) } 
         onSelect={ event => props.onSelect(event) }
-        validator={ value => isValidEmailAddress(value) }
         defaultValue={ props.defaultValue }
     />        
 );
 
-emailInput.propTypes = {
+addressLine1Input.propTypes = {
     defaultValue: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
     onSelect: PropTypes.func
 };
 
-export default emailInput;
-
+export default addressLine1Input;

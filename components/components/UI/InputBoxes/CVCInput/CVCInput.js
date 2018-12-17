@@ -1,27 +1,25 @@
 import PropTypes from 'prop-types';
 
 import UncontrolledInput from '../UncontrolledInput/UncontrolledInput';
-import { isValidEmailAddress } from '../../../../validation/validation';
 
-const emailInput = props => (
+const cVCInput = props => (
     <UncontrolledInput
-        required
-        name="email"
-        label="E-mail Address"
-        autoComplete="email"
-        fullWidth
+        required 
+        id="cvc"
+        label="CVC"
+        name="cvc"
+        // helperText="Last three digits on signature strip" 
+        autoComplete="cc-csc"
         onChange={ event => props.onChange(event) } 
         onSelect={ event => props.onSelect(event) }
-        validator={ value => isValidEmailAddress(value) }
         defaultValue={ props.defaultValue }
     />        
 );
 
-emailInput.propTypes = {
+cVCInput.propTypes = {
     defaultValue: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
     onSelect: PropTypes.func
 };
 
-export default emailInput;
-
+export default cVCInput;

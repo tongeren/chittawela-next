@@ -72,6 +72,7 @@ const styles = theme => ({
 });
 
 const steps = ['Contact', 'Address', 'Payment', 'Review'];
+const forms = ['contact', 'address', 'card'];
 
 class Checkout extends Component {
     state = {
@@ -100,7 +101,7 @@ class Checkout extends Component {
                     name: '',
                     number: '',
                     expiry: '',
-                    cvv: '',
+                    cvc: '',
                     checked: false,
                     noOfUpdates: 0
                 },
@@ -124,7 +125,7 @@ class Checkout extends Component {
                     name: '',
                     number: '',
                     expiry: '',
-                    cvv: '',
+                    cvc: '',
                     checked: false
                 }
             }    
@@ -137,19 +138,41 @@ class Checkout extends Component {
         this.setState({ isClient: true });
     };
     
+    isFormDataCorrect = (form) => {
+        switch (form) {
+            case 'contact': {
+                const { name, email } = { ...this.state.user.draft[form] };
+                return !(name === '' || email === ''); 
+            };    
+            case 'address': {
+                const { addressLine1, city, zip, country } = { ...this.state.user.draft[form] };
+                return !(addressLine1 === '' || city ==='' || zip ==='' || country ==='');
+            };
+            case 'card': {
+                const { name, number, expiry, cvv } = { ...this.state.user.draft[form] };
+                return !(name === '' || number === '' || expiry === '' || cvv === '');
+            };
+            default: {
+                console.log("Form data check for this form has not be defined.");   
+                return null;
+            };     
+        };
+    };
+
     handleChange = form => event => {
-        const label = event.target.name;
+        console.log("OnChange triggered...");
+
+        const label = event.target.name; // For some reason one cannot use event.target within produce...
         const isCheckbox = (label === "subscribe");
         const value = isCheckbox ? event.target.checked : event.target.value;
 
         this.setState(
             produce(immerDraft => {
-                immerDraft.user.draft[form][label] = value; // For some reason one cannot use event.target within produce...
+                immerDraft.user.draft[form][label] = value; 
             }), 
             () => {
                 // Check whether form data are now correct. Since local state has been checked if it exists we only need to check existence 
-                const { name, email } = { ...this.state.user.draft[form] };
-                const isAllDataCorrect = !(name === '' || email === ''); 
+                const isAllDataCorrect = this.isFormDataCorrect(form);
 
                 if (isAllDataCorrect) {
                     this.setState(
@@ -167,6 +190,20 @@ class Checkout extends Component {
                 };
             }    
         );
+    };
+
+    checkFormData = (event) => {
+        const step = this.state.activeStep;
+        const form = forms[step];
+
+        console.log("Triggered");
+        
+        const isAllDataCorrect = this.isFormDataCorrect(form);
+        if (isAllDataCorrect) {
+            console.log("Data is correct");
+            // Allow move to next form
+            this.setState({ nextAllowed: true});
+        };
     };
 
     confirmHandler = () => {
@@ -187,7 +224,7 @@ class Checkout extends Component {
             number:           this.state.user.card.number,
             expiration_month: month,
             expiration_year:  year,
-            security_code:    this.state.user.card.cvv
+            security_code:    this.state.user.card.cvc
         };
         
         Omise.createToken('card', cardInformation, (statusCode, response) => {
@@ -260,6 +297,7 @@ class Checkout extends Component {
                             formText={ contactFormText } 
                             formData={ this.state.user.draft.contact }
                             onChange={ this.handleChange('contact') }
+                            onSelect={ this.handleChange('contact') }
                         />;
             case 1:
                 return <AddressForm 
@@ -309,7 +347,9 @@ class Checkout extends Component {
         
         let navigationButtonsJSX = 
             <Fragment>
-                { this.getStepContent(activeStep) }
+                <div onMouseMove={ event => this.checkFormData(event) }>
+                    { this.getStepContent(activeStep) }
+                </div>
                 <div className={classes.buttons}>
                     { activeStep !== 0 && backButtonJSX }
                     <Button
@@ -356,70 +396,3 @@ Checkout.propTypes = {
 };
 
 export default withStyles(styles)(Checkout);
-
-/*
-// 
-    handleFormSubmit = form => event => {
-        // If data input is checkbox, then get the right value 
-        const isCheckBox = event.target.name === 'subscribe';
-        const isCheckBoxInEmailForm = (form === 'contact' && isCheckBox);
-        const newValue = isCheckBoxInEmailForm ? event.target.checked : event.target.value;
-        
-        // Store validated data in state
-        this.setState({ user: { ...this.state.user, [form]: { ...this.state.user[form], [event.target.name]: newValue }}}, 
-            () => console.log("Parent:", this.state.user.contact) 
-        );
-
-        // Validated data now stored in state, allowed to go to next form, and set checked flag
-        this.setState({ 
-            nextAllowed: true , 
-            user: { ...this.state.user, [form]: { ...this.state.user[form], checked: true }}
-        });
-    };
-
-*/
-
-/*
-handleChange = form => event => {
-        const isCheckbox = (event.target.name === "subscribe");
-        
-        console.log("event.target.name", event.target.name);
-        // Set draft state
-        this.setState({ user: {...this.state.user, 
-            draft: { ...this.state.user.draft, 
-                [form]: {...this.state.user.draft[form],
-                    [event.target.name]: isCheckbox ? event.target.checked : event.target.value } 
-                }
-            }
-        },
-            // Callback
-            () => {
-                console.log("Set draft state:", this.state.user.draft[form]);
-                // Check whether form data are now correct. Since local state has been checked if it exists we only need to check existence 
-                const { name, email } = { ...this.state.user.draft[form] };
-                const isAllDataCorrect = !(name === '' || email === ''); 
-
-                console.log("name, email:", name, email);
-                console.log("isAllDataCorrect:", isAllDataCorrect);
-
-                if (isAllDataCorrect) {
-                    console.log("Inside...");
-                    // Copy draft data to commit
-                    () => this.setState({ commit: this.state.user.draft }, 
-                        // Callback: update draft data with commit data
-                        () => {
-                            console.log("this.user.commit", this.user.commit);
-                            this.setState({ draft: this.state.user.commit},
-                            // Callback: increment no of updates of form
-                            (prevState) => this.setState({ [form]: { ...this.state.user.draft[form], 
-                                noOfUpdates: prevState.user.draft[form].noOfUpdates + 1 }},
-                                // Callback: allow move to next form
-                                () => this.setState({ nextAllowed: true}))
-                            )
-                        }
-                    );
-                };
-            }    
-        );    
-    };
-*/

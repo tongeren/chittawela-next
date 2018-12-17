@@ -10,7 +10,8 @@ const nameInput = props => (
         label="Name"
         autoComplete="name"
         fullWidth
-        onChange={ (event) => props.onChange(event) } 
+        onChange={ event => props.onChange(event) } 
+        onSelect={ event => props.onSelect(event) }
         validator={ value => isValidName(value) }
         defaultValue={ props.defaultValue }
     />
@@ -18,7 +19,8 @@ const nameInput = props => (
 
 nameInput.propTypes = {
     defaultValue: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    onSelect: PropTypes.func
 };
 
 export default nameInput;

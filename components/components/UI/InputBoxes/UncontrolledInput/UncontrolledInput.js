@@ -32,6 +32,7 @@ class UncontrolledInput extends Component {
             <DecoratedTextField
                 { ...allowedProps }
                 onChange={ event => this.handleChange(event) }
+                onSelect={ event => this.handleChange(event) }
                 error={ this.isError(this.state.value) }
                 defaultValue={ this.state.value }
             />
@@ -42,6 +43,7 @@ class UncontrolledInput extends Component {
 UncontrolledInput.propTypes = {
     defaultValue: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
+    onSelect: PropTypes.func,
     required: PropTypes.bool,
     fullWidth: PropTypes.bool,
     name: PropTypes.string.isRequired,

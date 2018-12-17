@@ -14,10 +14,16 @@ const contactForm = props => (
         <Typography variant="h6" gutterBottom>{ props.formText.title }</Typography>
         <Grid container spacing={24}>
             <Grid item xs={12} sm={6}>
-                <NameInput onChange={ event => props.onChange(event) } defaultValue={ props.formData.name }/>
+                <NameInput 
+                    onChange={ event => props.onChange(event) }
+                    onSelect={ event => props.onSelect(event) } 
+                    defaultValue={ props.formData.name } />
             </Grid>
             <Grid item xs={12}>
-                <EmailInput onChange={ event => props.onChange(event) } defaultValue={ props.formData.email }/>
+                <EmailInput 
+                    onChange={ event => props.onChange(event) } 
+                    onSelect={ event => props.onSelect(event) }
+                    defaultValue={ props.formData.email }/>
             </Grid>
             <Grid item xs={12}>
                 <FormControlLabel
