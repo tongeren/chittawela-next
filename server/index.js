@@ -1,10 +1,12 @@
 // ES6 import using esm
 import { routes } from '../components/routes/Routes';  
 import express from 'express';
+import https  from 'https';
 import next from 'next';
 import favicon from 'serve-favicon';
 import path from 'path';
 import morgan from 'morgan';
+import fs from 'fs';
 
 import { addSingleSubscriberToList } from './mailchimp';
 import expressRoutesApis from '../lib/api/api.config';
@@ -14,8 +16,14 @@ const expressRouteMailchimp = expressRoutesApis.Mailchimp;
 
 const dev = process.env.NODE_ENV !== 'production';
 const port = process.env.PORT || 3000;
-const ROOT_URL = dev ? `http://localhost:${port}` : appUrl;
+const ROOT_URL = dev ? `https://localhost:${port}` : appUrl;
 
+const certOptions = {
+    key: fs.readFileSync(path.resolve('./server/server.key')),
+    cert: fs.readFileSync(path.resolve('./server/server.crt'))
+};
+
+ 
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
@@ -29,6 +37,9 @@ app.prepare()
     .then(() => {
         const server = express();
         
+        // Use local ssl certificate in development
+        const secure = dev ? https.createServer(certOptions, server) : server;
+
         // Set up the logger middleware
         server.use(morgan(morganFormat, skipNonErrorMessages));
 
@@ -64,7 +75,14 @@ app.prepare()
             return handle(req, res);
         });
 
+        /*
         server.listen(port, (err) => {
+            if (err) throw err;
+            console.log(`> Ready on ${ROOT_URL}`);
+        });
+        */
+
+        secure.listen(port, (err) => {
             if (err) throw err;
             console.log(`> Ready on ${ROOT_URL}`);
         });

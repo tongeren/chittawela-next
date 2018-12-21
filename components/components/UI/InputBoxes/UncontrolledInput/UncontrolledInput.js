@@ -10,29 +10,28 @@ class UncontrolledInput extends Component {
         value: this.props.defaultValue
     };
 
-    isError = (value) => {
-        // If the validator is supplied, then determine whether we are in an error state, otherwise we are not
-        return this.props.validator ? !this.props.validator(value) : false;
-    };
-
-    handleChange = event => {
-        // Change local state 
+    handleChange = (event, callback) => {
         this.setState({ value: event.target.value });
 
         // Whenever error status is false, also lift state up 
-        const isValid = !this.isError(this.state.value);
-        if (isValid) { this.props.onChange(event) };
+        const isFunction = typeof(this.props.validator) === 'function';
+        const isValid = isFunction ? this.props.validator(this.state.value) : true;
+        
+        isValid ? callback(event) : null;
+    };
+
+    isError = value => {
+       return this.props.validator ? !this.props.validator(value) : false;
     };
 
     render() {
-        // Remove 'validator' prop which is not allowed on DOM node
-        const { validator, ...allowedProps } = this.props;
-
+        const { callback, onChange, onSelect, error, validator, defaultValue,  ...allowedProps } = this.props;
+        
         return (
             <DecoratedTextField
                 { ...allowedProps }
-                onChange={ event => this.handleChange(event) }
-                onSelect={ event => this.handleChange(event) }
+                onChange={ event => this.handleChange(event, this.props.callback) }
+                onSelect={ event => this.handleChange(event, this.props.callback) }
                 error={ this.isError(this.state.value) }
                 defaultValue={ this.state.value }
             />
@@ -42,14 +41,9 @@ class UncontrolledInput extends Component {
 
 UncontrolledInput.propTypes = {
     defaultValue: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
-    onSelect: PropTypes.func,
-    required: PropTypes.bool,
-    fullWidth: PropTypes.bool,
-    name: PropTypes.string.isRequired,
-    label: PropTypes.string.isRequired,
-    autoComplete: PropTypes.string,
-    validator: PropTypes.func
+    validator: PropTypes.any,
+    callback: PropTypes.func.isRequired,
 };
 
 export default UncontrolledInput;
+

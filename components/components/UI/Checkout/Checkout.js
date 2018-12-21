@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Head from 'next/head';
 
-import produce from 'immer'; // https://github.com/mweststrate/immer
+import produce from 'immer'; // https://github.com/mweststrate/immer: use for handling nested state
 
 import withStyles from '@material-ui/core/styles/withStyles';
 import AppBar from '@material-ui/core/AppBar';
@@ -139,6 +139,8 @@ class Checkout extends Component {
     };
     
     isFormDataCorrect = (form) => {
+        console.log("isFormDataCorrect");
+
         switch (form) {
             case 'contact': {
                 const { name, email } = { ...this.state.user.draft[form] };
@@ -149,8 +151,13 @@ class Checkout extends Component {
                 return !(addressLine1 === '' || city ==='' || zip ==='' || country ==='');
             };
             case 'card': {
-                const { name, number, expiry, cvv } = { ...this.state.user.draft[form] };
-                return !(name === '' || number === '' || expiry === '' || cvv === '');
+                console.log("Checking card...");
+
+                const { name, number, expiry, cvc } = { ...this.state.user.draft[form] };
+
+                console.log("name, number, expiry, cvc", name, number, expiry, cvc);
+                
+                return !(name === '' || number === '' || expiry === '' || cvc === '');
             };
             default: {
                 console.log("Form data check for this form has not be defined.");   
@@ -159,20 +166,19 @@ class Checkout extends Component {
         };
     };
 
-    handleChange = form => event => {
-        console.log("OnChange triggered...");
-
-        const label = event.target.name; // For some reason one cannot use event.target within produce...
-        const isCheckbox = (label === "subscribe");
+    handleChange = form => (event, name)  => {
+        const isCheckbox = (name === "subscribe");
         const value = isCheckbox ? event.target.checked : event.target.value;
 
         this.setState(
             produce(immerDraft => {
-                immerDraft.user.draft[form][label] = value; 
+                immerDraft.user.draft[form][name] = value; 
             }), 
             () => {
                 // Check whether form data are now correct. Since local state has been checked if it exists we only need to check existence 
                 const isAllDataCorrect = this.isFormDataCorrect(form);
+                
+                console.log("isAllDataCorrect, form", isAllDataCorrect, form);
 
                 if (isAllDataCorrect) {
                     this.setState(
@@ -189,21 +195,7 @@ class Checkout extends Component {
                     );
                 };
             }    
-        );
-    };
-
-    checkFormData = (event) => {
-        const step = this.state.activeStep;
-        const form = forms[step];
-
-        console.log("Triggered");
-        
-        const isAllDataCorrect = this.isFormDataCorrect(form);
-        if (isAllDataCorrect) {
-            console.log("Data is correct");
-            // Allow move to next form
-            this.setState({ nextAllowed: true});
-        };
+        );  
     };
 
     confirmHandler = () => {
@@ -288,7 +280,7 @@ class Checkout extends Component {
         });
     };
 
-    // This should go in a HOC
+    // This should go in a factory
     getStepContent = step => {
         switch (step) {
             case 0:
@@ -297,7 +289,6 @@ class Checkout extends Component {
                             formText={ contactFormText } 
                             formData={ this.state.user.draft.contact }
                             onChange={ this.handleChange('contact') }
-                            onSelect={ this.handleChange('contact') }
                         />;
             case 1:
                 return <AddressForm 
@@ -321,6 +312,7 @@ class Checkout extends Component {
     };
 
     render() {
+        
         const { classes } = this.props;
         const { activeStep } = this.state;
 
@@ -347,7 +339,7 @@ class Checkout extends Component {
         
         let navigationButtonsJSX = 
             <Fragment>
-                <div onMouseMove={ event => this.checkFormData(event) }>
+                <div> {/* onMouseMove={ event => this.checkFormData(event) }> */}
                     { this.getStepContent(activeStep) }
                 </div>
                 <div className={classes.buttons}>

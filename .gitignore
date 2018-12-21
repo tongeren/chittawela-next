@@ -4,6 +4,10 @@
 .next/
 node_modules/
 
+# development
+server/server.crt
+server/server.key
+
 # testing
 
 

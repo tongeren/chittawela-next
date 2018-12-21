@@ -4,14 +4,13 @@ import UncontrolledInput from '../UncontrolledInput/UncontrolledInput';
 
 const countryInput = props => (
     <UncontrolledInput
+        { ...props }
         required
         id="country"
         name="country"
         label="Country"
         fullWidth
         autoComplete="billing country"
-        onChange={ event => props.onChange(event) } 
-        onSelect={ event => props.onSelect(event) }
         defaultValue={ props.defaultValue }
         SelectProps={{ native: true }}>
         { props.children }
@@ -20,7 +19,6 @@ const countryInput = props => (
 
 countryInput.propTypes = {
     defaultValue: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
     onSelect: PropTypes.func
 };
 
