@@ -14,7 +14,6 @@ import UncontrolledInput from '../UncontrolledInput/UncontrolledInput';
 
 const inputboxes = {
     addressLine1: {
-        //id: "address1", 
         name: "addressLine1",
         label: "Address line 1",
         autoComplete: "billing address-line-1",
@@ -23,7 +22,6 @@ const inputboxes = {
         fullWidth: true
     },
     addressLine2: {
-        //id: "address2",
         name: "addressLine2",
         label: "Address line 2",
         autoComplete: "billing address-line-2",
@@ -32,7 +30,6 @@ const inputboxes = {
         fullWidth: true
     },
     cardName: {
-        //id: "cardName",
         name: "cardName", 
         label: "Name on card", 
         autoComplete: "cc-name",
@@ -41,7 +38,6 @@ const inputboxes = {
         fullWidth: true
     },
     cardNumber: {
-        //id: "cardNumber", 
         name: "cardNumber",
         label: "Card number", 
         autoComplete: "cc-number",
@@ -50,7 +46,6 @@ const inputboxes = {
         fullWidth: true
     },
     city: {
-        id: "city",
         name: "city",
         label: "City",
         autoComplete: "billing address-level2",
@@ -59,7 +54,6 @@ const inputboxes = {
         fullWidth: true
     },
     country: {
-        //id: "country",
         name: "country",
         label: "Country",
         autoComplete: "billing country",
@@ -68,7 +62,6 @@ const inputboxes = {
         fullWidth: true
     },
     cvc: {
-        //id: "cvc",
         name: "cvc",
         label: "CVC",
         autoComplete: "cc-csc",
@@ -77,7 +70,6 @@ const inputboxes = {
         fullWidth: false
     },    
     email: {
-        //id: "email",
         name: "email",
         label: "E-mail Address",
         autoComplete: "email",
@@ -86,7 +78,6 @@ const inputboxes = {
         fullWidth: true
     },
     expiry: {
-        //id="expDate" ,
         name: "expiry",
         label: "Expiry date",
         autoComplete: "cc-exp",
@@ -95,7 +86,6 @@ const inputboxes = {
         fullWidth: false
     },
     name: {
-        //id: "name",
         name: "name",
         label: "Name",
         autoComplete: "name",
@@ -104,7 +94,6 @@ const inputboxes = {
         fullWidth: true
     },
     zip: {
-        //id: "zip",
         name: "zip",
         label: "Zip / Postal code",
         autoComplete: "billing postal-code",
@@ -122,15 +111,7 @@ class InputBoxFactory extends Component {
     };    
 
     static build = (name, props) => {
-        if (name === 'cvc') {
-            console.log("{ ...props }", { ...props });
-        };
-
-        const { callback, ...allowedProps } =  Object.assign({}, inputboxes[name], props) // {...props, ...inputboxes[name]};
-
-        if (name === 'cvc') {
-            console.log("{ ...allowedProps }", { ...allowedProps });
-        };    
+        const { callback, ...allowedProps } =  { ...inputboxes[name], ...props };
 
         return (
             <UncontrolledInput
@@ -141,5 +122,5 @@ class InputBoxFactory extends Component {
     };                  
 };
 
-export default InputBoxFactory
+export default InputBoxFactory;
 

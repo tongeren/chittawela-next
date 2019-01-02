@@ -1,4 +1,4 @@
-import { Fragment, Component } from 'react';
+import { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -9,20 +9,11 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
 
 const products = [
-  { name: 'Product 1', desc: 'A nice thing', price: '$9.99' },
-];
-
-const addresses = ['1 Material-UI Drive', 'Reactville', 'Anytown', '99999', 'USA'];
-
-const payments = [
-  { name: 'Card type', detail: 'Visa' },
-  { name: 'Card holder', detail: 'Mr John Smith' },
-  { name: 'Card number', detail: 'xxxx-xxxx-xxxx-1234' },
-  { name: 'Expiry date', detail: '04/2024' },
+  { name: `Chittawela's Life Transformation` , price: 'THB 80,000' },
 ];
 
 const styles = theme => ({
-  listItem: {
+    listItem: {
     padding: `${theme.spacing.unit}px 0`,
   },
   total: {
@@ -33,64 +24,99 @@ const styles = theme => ({
   },
 });
 
-class Review extends Component {
-  render() {
-    const { classes } = this.props;
+const onlyShowLastFourDigits = (creditCardNumber) => {
+  const length = creditCardNumber.length;
+  const invisible = "*".repeat(length - 4);
+  const visible = creditCardNumber.substring(length - 4, length);
+  return  invisible + visible; 
+};
 
-    return (
+const review = props => {
+  const { classes, formText, formData } = props;
+
+  return (
       <Fragment>
         <Typography variant="h6" gutterBottom>
-          Order summary
+          { formText.title }
         </Typography>
-        <List disablePadding>
-          {products.map(product => (
-            <ListItem className={classes.listItem} key={product.name}>
-              <ListItemText primary={product.name} secondary={product.desc} />
-              <Typography variant="body2">{product.price}</Typography>
+          <List disablePadding>
+          { products.map(product => (
+            <ListItem className={ classes.listItem } key={ product.name }>
+              <ListItemText primary={ product.name } />
+              <Typography variant="body2">{ product.price }</Typography>
             </ListItem>
           ))}
-          <ListItem className={classes.listItem}>
+          <ListItem className={ classes.listItem }>
             <ListItemText primary="Total" />
             <Typography variant="subtitle1" className={classes.total}>
-              $34.06
+              { products[0].price }
             </Typography>
           </ListItem>
         </List>
-        <Grid container spacing={16}>
+        <Grid container spacing={8}>
           <Grid item xs={12} sm={6}>
             <Typography variant="h6" gutterBottom className={classes.title}>
-              Shipping
+              { formText.contact }
             </Typography>
-            <Typography gutterBottom>John Smith</Typography>
-            <Typography gutterBottom>{addresses.join(', ')}</Typography>
+            <Typography gutterBottom>{ formData.contact.name }</Typography>
+            <Typography gutterBottom>{ formData.contact.email }</Typography>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Typography variant="h6" gutterBottom className={classes.title}>
+              { formText.address }
+            </Typography>
+            <Typography gutterBottom>{ formData.address.addressLine1 }</Typography>
+            <Typography gutterBottom>{ formData.address.addressLine2 }</Typography>
+            <Typography gutterBottom>{ formData.address.city }</Typography>
+            <Typography gutterBottom>{ formData.address.zip }</Typography>
+            <Typography gutterBottom>{ formData.address.country }</Typography> 
           </Grid>
           <Grid item container direction="column" xs={12} sm={6}>
             <Typography variant="h6" gutterBottom className={classes.title}>
-              Payment details
+              { formText.payment }
             </Typography>
             <Grid container>
-              {payments.map(payment => (
-                <Fragment key={payment.name}>
                   <Grid item xs={6}>
-                    <Typography gutterBottom>{payment.name}</Typography>
+                    <Typography gutterBottom>{ formData.card.name }</Typography>
+                    <Typography gutterBottom>{ onlyShowLastFourDigits(formData.card.number) }</Typography>
+                    <Typography gutterBottom>{ formData.card.expiry }</Typography>
                   </Grid>
-                  <Grid item xs={6}>
-                    <Typography gutterBottom>{payment.detail}</Typography>
-                  </Grid>
-                </Fragment>
-              ))}
             </Grid>
           </Grid>
         </Grid>
       </Fragment>
     );  
-  };
 };
 
-Review.propTypes = {
+review.propTypes = {
   classes: PropTypes.object.isRequired,
+  formText: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    contact: PropTypes.string.isRequired,
+    address: PropTypes.string.isRequired,
+    payment: PropTypes.string.isRequired
+  }),
+  formData: PropTypes.shape({
+    contact: PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      email: PropTypes.string.isRequired
+    }),  
+    address: PropTypes.shape({
+      addressLine1: PropTypes.string.isRequired,
+      addressLine2: PropTypes.string.isRequired,
+      city: PropTypes.string.isRequired,
+      zip: PropTypes.string.isRequired,
+      country: PropTypes.string.isRequired
+    }),  
+    card: PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      number: PropTypes.string.isRequired,
+      expiry: PropTypes.string.isRequired,
+      cvc: PropTypes.string.isRequired
+    })
+  })  
 };
 
-export default withStyles(styles)(Review);
+export default withStyles(styles)(review);
 
 

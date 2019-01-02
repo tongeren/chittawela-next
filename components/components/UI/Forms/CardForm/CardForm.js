@@ -15,8 +15,6 @@ const cardValidators = {
     number: value => valid.number(value).isValid,
     expiry: value => valid.expirationDate(value).isValid,
     cvc: number => cvc => {
-        console.log("cvcValidator");
-
         const cvcLength = (number === '') ? 3 : valid.number(number).card.code.size;
         const isValid = cvc.length === cvcLength;
         return isValid;
@@ -26,7 +24,7 @@ const cardValidators = {
 class PaymentForm extends Component {
     state = { 
         ...this.props.formData, 
-        focused: 'number'
+        focused: 'number',
     };
 
     getPropName = (name) => {
@@ -52,6 +50,7 @@ class PaymentForm extends Component {
     };
     
     handler = (event, name) => {
+        const { onChange } = this.props;
         // Get label of state
         const label = this.getPropName(name);
         // Change focus
@@ -59,10 +58,12 @@ class PaymentForm extends Component {
         // Change local state
         this.handleChange(event, label);
         // Change global state
-        this.props.onChange(event, label);
+        onChange(event, label);
     };
 
     render() {
+        const { formData } = this.props;
+
         // Initialize factory
         InputBoxFactory.init(this.handler);
 
@@ -73,25 +74,25 @@ class PaymentForm extends Component {
                 <Grid container spacing={24}>
                     <Grid item xs={12} md={6}>
                         { InputBoxFactory.build('cardNumber', { 
-                            defaultValue: this.props.formData.number,
+                            defaultValue: formData.number,
                             validator: cardValidators.number
                         }) } 
                     </Grid>
                     <Grid item xs={12} md={6}>
                         { InputBoxFactory.build('cardName', { 
-                            defaultValue: this.props.formData.name,
+                            defaultValue: formData.name,
                             validator: cardValidators.name 
                         }) } 
                     </Grid>
                     <Grid item xs={6} md={3}>
                         { InputBoxFactory.build('expiry', { 
-                            defaultValue: this.props.formData.expiry,
+                            defaultValue: formData.expiry,
                             validator: cardValidators.expiry
                         }) } 
                     </Grid>
                     <Grid item xs={6} md={3}>
                         { InputBoxFactory.build('cvc', { 
-                            defaultValue: this.props.formData.cvc,
+                            defaultValue: formData.cvc,
                             validator: cardValidators.cvc(this.state.number)  
                         }) } 
                     </Grid>
@@ -103,6 +104,3 @@ class PaymentForm extends Component {
 
 export default PaymentForm;
 
-/*
-<Cards key={ props.key } { ...props.formData } />
-*/

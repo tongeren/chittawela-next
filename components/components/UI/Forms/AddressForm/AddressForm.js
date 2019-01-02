@@ -1,4 +1,5 @@
 import { Fragment } from 'react';
+import PropTypes from 'prop-types';
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -9,30 +10,35 @@ import CountryInput from '../../InputBoxes/CountryInput/CountryInput';
 import CountryChoiceList from '../../CountryChoiceList/CountryChoiceList';
 
 const addressForm = (props) => {
+    const { formText, formData, onChange } = props;
+
+    // Use anonymous function instead of binding in render
+    const callback = (event, ) => onChange(event, 'country');
+    
     // Initialize factory
-    InputBoxFactory.init(props.onChange);
+    InputBoxFactory.init(onChange);
 
     return (
         <Fragment>
-            <Typography variant="h6" gutterBottom>{ props.formText.title }</Typography>
+            <Typography variant="h6" gutterBottom>{ formText.title }</Typography>
             <Grid container spacing={24}>
                 <Grid item xs={12}>
-                    { InputBoxFactory.build('addressLine1', { defaultValue: props.formData.addressLine1 }) } 
+                    { InputBoxFactory.build('addressLine1', { defaultValue: formData.addressLine1 }) } 
                 </Grid>
                 <Grid item xs={12}>
-                    { InputBoxFactory.build('addressLine2', { defaultValue: props.formData.addressLine2 }) }       
+                    { InputBoxFactory.build('addressLine2', { defaultValue: formData.addressLine2 }) }       
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    { InputBoxFactory.build('city', { defaultValue: props.formData.city }) }
+                    { InputBoxFactory.build('city', { defaultValue: formData.city }) }
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    { InputBoxFactory.build('zip', { defaultValue: props.formData.zip }) }
+                    { InputBoxFactory.build('zip', { defaultValue: formData.zip }) }
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <CountryInput 
-                        defaultValue={ props.formData.country }
+                        defaultValue={ formData.country }
                         validator={ false }
-                        callback={ (event, ) => props.onChange(event, 'country') }
+                        callback={ callback }
                     >
                         <CountryChoiceList />  
                     </CountryInput>
@@ -42,21 +48,19 @@ const addressForm = (props) => {
     ); 
 };   
     
+addressForm.propTypes = {
+    formText: PropTypes.shape({
+        title: PropTypes.string.isRequired
+    }),
+    formData: PropTypes.shape({
+        addressLine1: PropTypes.string.isRequired,
+        addressLine2: PropTypes.string.isRequired,
+        city: PropTypes.string.isRequired,
+        zip: PropTypes.string.isRequired,
+        country: PropTypes.string.isRequired
+    }),
+    onChange: PropTypes.func.isRequired
+};
+
 export default addressForm;
 
-/*
-<Grid item xs={12}>
-                    <AddressLine2Input onChange={ event => props.onChange(event) } defaultValue={ props.formData.addressLine2 }/>   
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <CityInput onChange={ event => props.onChange(event) } defaultValue={ props.formData.city }/>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <ZipInput onChange={ event => props.onChange(event) } defaultValue={ props.formData.zip }/>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <CountryInput onChange={ event => props.onChange(event) } defaultValue={ props.formData.country }>
-                        <CountryChoiceList />  
-                    </CountryInput>
-                </Grid>
-*/
