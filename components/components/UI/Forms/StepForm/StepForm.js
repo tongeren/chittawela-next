@@ -12,9 +12,12 @@ const stepForm = (props) => {
     const { ...stepContentProps } = { step, noOfUpdates, formData, onChange };
     const { ...stepperButtonsProps } = { classes, activeStep, handleBack, handleNext, nextAllowed, noOfSteps };
 
+    const totalNumberOfUpdates = noOfUpdates.contact + noOfUpdates.address + noOfUpdates.card;
+
+    console.log("StepForm rerender...");
     return (
         <Fragment>
-            <StepContent { ...stepContentProps } />
+            <StepContent key={ totalNumberOfUpdates } { ...stepContentProps } />
             <EmptyBox width={'80vw'} height={'4vh'}/> 
             <StepperButtons { ...stepperButtonsProps }/>
         </Fragment>

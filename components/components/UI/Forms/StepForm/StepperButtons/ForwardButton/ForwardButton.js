@@ -3,10 +3,13 @@ import Button from '@material-ui/core/Button';
 
 const forwardButton = (props) => {
     const { classes, activeStep, lastStep, handleNext, nextAllowed } = props;
+    
+    const isConfirmation = (activeStep === lastStep);
+    const isReview = (activeStep === lastStep - 1);
+    const isNextAllowed = (isConfirmation || isReview || nextAllowed);
 
-    const isNextAllowed = (activeStep === lastStep || activeStep === lastStep - 1 || activeStep === lastStep - 2 || nextAllowed);
-    const text = (activeStep === lastStep) ? 'Go home' : (
-        (activeStep === lastStep - 1) ? 'Place order' : 'Next'
+    const text = isConfirmation ? 'Go home' : (
+        isReview ? 'Place order' : 'Next'
     );
 
     return (

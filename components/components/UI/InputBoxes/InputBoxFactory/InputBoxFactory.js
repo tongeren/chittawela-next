@@ -112,11 +112,12 @@ class InputBoxFactory extends Component {
 
     static build = (name, props) => {
         const { callback, ...allowedProps } =  { ...inputboxes[name], ...props };
+        const callbackHandler = (event, ) => InputBoxFactory._handler(event, name);
 
         return (
             <UncontrolledInput
                 { ...allowedProps }
-                callback={ (event, ) => InputBoxFactory._handler(event, name) }
+                callback={ callbackHandler }
             />
         );    
     };                  

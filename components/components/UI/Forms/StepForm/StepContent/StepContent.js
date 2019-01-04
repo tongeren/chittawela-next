@@ -26,7 +26,7 @@ const text = {
 };
 
 const stepContent = (props) => {
-    const {step, noOfUpdates, formData, onChange } = props;
+    const { step, noOfUpdates, formData, onChange } = props;
 
     switch (step) {
         case 0:

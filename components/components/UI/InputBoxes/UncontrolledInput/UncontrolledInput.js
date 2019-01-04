@@ -8,32 +8,65 @@ class UncontrolledInput extends Component {
     // Load and store draft state
     state = {
         value: this.props.defaultValue
+    };    
+
+    isError = value => {
+        const { validator } = this.props;
+ 
+        const isFunction = typeof(validator) === 'function';
+        const error = this.props.required &&  (value === '');
+ 
+        return isFunction ? !this.props.validator(value) : error;
     };
 
     handleChange = (event, callback) => {
-        this.setState({ value: event.target.value });
+        const prevValue = this.state.value;
+        const newValue = event.target.value;
 
-        // Whenever error status is false, also lift state up 
-        const isFunction = typeof(this.props.validator) === 'function';
-        const isValid = isFunction ? this.props.validator(this.state.value) : true;
+        const prevError = this.isError(prevValue);
+        const newError = this.isError(newValue);
         
-        isValid ? callback(event) : null;
+        console.log("handleChange: (newError, prevError):", newError, prevError);
+
+        this.setState({ 
+            value: newValue
+        });
+
+        const changeToError = !prevError && newError;
+        const noError = !newError;
+
+        // Lift state up if either: 1. error state is false (input has been checked),
+        // or:                      2. previous error state was false, but now is true (change to error)
+        const liftStateUp = noError || changeToError;
+
+        if (liftStateUp) {
+            console.log("Lift state up...");
+            callback(event);
+        };
     };
 
-    isError = value => {
-       return this.props.validator ? !this.props.validator(value) : false;
+    onChangeHandler = event => this.handleChange(event, this.props.callback);
+    onSelectHandler = this.onChangeHandler;
+
+    // We need this method to refocus on the current input field because we loose focus after next button is enabled
+    reFocus = input => {
+        if (input) {
+            setTimeout(() => { input.focus() }, 100);
+        };
     };
 
     render() {
-        const { callback, onChange, onSelect, error, validator, defaultValue,  ...allowedProps } = this.props;
+        const { callback, onChange, onSelect, validator, error, defaultValue, inputRef,  ...allowedProps } = this.props;
+        const { value } = this.state;
         
         return (
             <DecoratedTextField
                 { ...allowedProps }
-                onChange={ event => this.handleChange(event, this.props.callback) }
-                onSelect={ event => this.handleChange(event, this.props.callback) }
-                error={ this.isError(this.state.value) }
-                defaultValue={ this.state.value }
+                inputRef={ this.reFocus }
+                onChange={ this.onChangeHandler }
+                onSelect={ this.onSelectHandler }
+                error={ this.isError(value) }
+                defaultValue={ value }
             />
         );
     };
@@ -43,6 +76,7 @@ UncontrolledInput.propTypes = {
     defaultValue: PropTypes.string.isRequired,
     validator: PropTypes.any,
     callback: PropTypes.func.isRequired,
+    required: PropTypes.bool.isRequired
 };
 
 export default UncontrolledInput;
