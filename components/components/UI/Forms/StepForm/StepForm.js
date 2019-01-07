@@ -6,18 +6,15 @@ import StepperButtons from './StepperButtons/StepperButtons';
 import EmptyBox from '../../EmptyBox/EmptyBox';
 
 const stepForm = (props) => {
-    const { classes, activeStep, noOfUpdates, formData, handleBack, handleNext, onChange, nextAllowed, noOfSteps } = props;
+    const { classes, activeStep, formData, handleBack, handleNext, onChange, nextAllowed, noOfSteps } = props;
     const step = activeStep;
     
-    const { ...stepContentProps } = { step, noOfUpdates, formData, onChange };
+    const { ...stepContentProps } = { step, formData, onChange };
     const { ...stepperButtonsProps } = { classes, activeStep, handleBack, handleNext, nextAllowed, noOfSteps };
 
-    const totalNumberOfUpdates = noOfUpdates.contact + noOfUpdates.address + noOfUpdates.card;
-
-    console.log("StepForm rerender...");
     return (
         <Fragment>
-            <StepContent key={ totalNumberOfUpdates } { ...stepContentProps } />
+            <StepContent { ...stepContentProps } />
             <EmptyBox width={'80vw'} height={'4vh'}/> 
             <StepperButtons { ...stepperButtonsProps }/>
         </Fragment>
@@ -27,11 +24,6 @@ const stepForm = (props) => {
 stepForm.propTypes = {
     classes: PropTypes.string.isRequired,
     activeStep: PropTypes.number.isRequired,
-    noOfUpdates: PropTypes.shape({ 
-        contact: PropTypes.number.isRequired,
-        address: PropTypes.number.isRequired,
-        card: PropTypes.number.isRequired
-    }),
     formData: PropTypes.shape({
         contact: PropTypes.object.isRequired,
         address: PropTypes.object.isRequired,

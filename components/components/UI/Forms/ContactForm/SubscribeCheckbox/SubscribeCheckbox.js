@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 import Checkbox from '@material-ui/core/Checkbox';
 
 class SubscribeCheckbox extends Component {
@@ -7,10 +8,11 @@ class SubscribeCheckbox extends Component {
     };
 
     handleChange = event => {
+        const value = event.target.checked;
         // Change local state 
-        this.setState({ checked: event.target.checked });
+        this.setState({ checked: value });
         // Always lift state up 
-        this.props.onChange(event);
+        this.props.onChange(value);
     };
 
     render() {
@@ -23,6 +25,11 @@ class SubscribeCheckbox extends Component {
             /> 
         );
     };
+};
+
+SubscribeCheckbox.propTypes = {
+    defaultValue: PropTypes.bool.isRequired,
+    onChange: PropTypes.func.isRequired
 };
 
 export default SubscribeCheckbox;

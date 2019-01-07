@@ -26,29 +26,27 @@ const text = {
 };
 
 const stepContent = (props) => {
-    const { step, noOfUpdates, formData, onChange } = props;
+    const { step, formData, onChange } = props;
+    const { contact, address, card } = formData;
 
     switch (step) {
         case 0:
             return <ContactForm 
-                        key={ noOfUpdates.contact }
                         formText={ text.contact } 
-                        formData={ formData.contact }
-                        onChange={ onChange('contact') }
+                        formData={ contact }
+                        onChange={ onChange }
                     />;
         case 1:
             return <AddressForm 
-                        key={ noOfUpdates.address }
                         formText={ text.address } 
-                        formData={ formData.address }
-                        onChange={ onChange('address') }
+                        formData={ address }
+                        onChange={ onChange }
                     />;
         case 2:
             return <CardForm 
-                        key={ noOfUpdates.card }
                         formText={ text.payment } 
-                        formData={ formData.card }
-                        onChange={ onChange('card') }
+                        formData={ card }
+                        onChange={ onChange }
                     />;
         case 3:
             return <Review
@@ -64,11 +62,6 @@ const stepContent = (props) => {
 
 stepContent.propTypes={
     step: PropTypes.number.isRequired,
-    noOfUpdates: PropTypes.shape({ 
-        contact: PropTypes.number.isRequired,
-        address: PropTypes.number.isRequired,
-        card: PropTypes.number.isRequired
-    }),
     formData: PropTypes.shape({
         contact: PropTypes.object.isRequired,
         address: PropTypes.object.isRequired,

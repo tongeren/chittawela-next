@@ -7,12 +7,13 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import SubscribeCheckbox from './SubscribeCheckbox/SubscribeCheckbox';
 import InputBoxFactory from '../../InputBoxes/InputBoxFactory/InputBoxFactory';
+import EmptyBox from '../../EmptyBox/EmptyBox';
 
 const contactForm = props => {
     const { onChange, formText, formData } = props;
 
     // Use anonymous function instead of binding in render
-    const subscribe = (event, ) => onChange(event, 'subscribe');
+    const subscribe = (value, error, ) => onChange(value, error, 'subscribe');
 
     // Initialize factory
     InputBoxFactory.init(onChange);
@@ -20,6 +21,7 @@ const contactForm = props => {
     return (
         <Fragment>
             <Typography variant="h6" gutterBottom>{ formText.title }</Typography>
+            <EmptyBox width={'80vw'} height={'2vh'}/>
             <Grid container spacing={24}>
                 <Grid item xs={12} sm={6}>
                     { InputBoxFactory.build('name', { defaultValue: formData.name }) } 

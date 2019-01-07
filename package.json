@@ -16,7 +16,7 @@
     "testEnvironment": "enzyme",
     "testEnvironmentOptions": {
       "enzymeAdapter": "react16"
-    }  
+    }
   },
   "keywords": [
     "Next.js"
@@ -35,9 +35,9 @@
     "card-validator": "^6.1.0",
     "classnames": "^2.2.6",
     "cloudinary-react": "^1.0.6",
-    "country-list": "^2.1.0",
     "esm": "^3.0.84",
     "express": "^4.16.4",
+    "i18n-iso-countries": "^3.7.8",
     "immer": "^1.8.2",
     "isomorphic-fetch": "^2.2.1",
     "material-auto-rotating-carousel": "^2.1.0",

@@ -1,28 +1,29 @@
 import PropTypes from 'prop-types';
 
 import UncontrolledInput from '../UncontrolledInput/UncontrolledInput';
+import CountryOptions from './CountryOptions/CountryOptions';
 
 const countryInput = props => {
-    const { children, defaultValue, ...allowedProps } = props;
+    const { defaultValue, ...allowedProps } = props;
 
     return (
         <UncontrolledInput
             { ...allowedProps }
             required
+            select
             id="country"
             name="country"
             label="Country"
+            defaultValue={ defaultValue }
             fullWidth
             autoComplete="billing country"
-            defaultValue={ defaultValue }
             SelectProps={{ native: true }}>
-            { children }
+                <CountryOptions /> 
         </UncontrolledInput>
     );            
 };
 
 countryInput.propTypes = {
-    children: PropTypes.object.isRequired,
     defaultValue: PropTypes.string.isRequired
 };
 

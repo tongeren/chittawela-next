@@ -1,6 +1,5 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import DecoratedTextField from '../../DecoratedTextField/DecoratedTextField';   
 
 // Fully uncontrolled component 
@@ -11,60 +10,45 @@ class UncontrolledInput extends Component {
     };    
 
     isError = value => {
-        const { validator } = this.props;
+        const { validator, required } = this.props;
  
+        // If required, then if there is a validator, then use it, else only error if empty, else no error
         const isFunction = typeof(validator) === 'function';
-        const error = this.props.required &&  (value === '');
- 
-        return isFunction ? !this.props.validator(value) : error;
+        const isErrorUsingValidator = isFunction ? !this.props.validator(value) : undefined;
+        const isEmpty = (value === '');
+        
+        return required ? (isFunction ? isErrorUsingValidator : isEmpty) : false;
     };
 
-    handleChange = (event, callback) => {
+    handleChange = event => {
         const prevValue = this.state.value;
         const newValue = event.target.value;
 
-        const prevError = this.isError(prevValue);
         const newError = this.isError(newValue);
         
-        console.log("handleChange: (newError, prevError):", newError, prevError);
+        const isValueChanged = !(prevValue === newValue);
 
-        this.setState({ 
-            value: newValue
-        });
-
-        const changeToError = !prevError && newError;
-        const noError = !newError;
-
-        // Lift state up if either: 1. error state is false (input has been checked),
-        // or:                      2. previous error state was false, but now is true (change to error)
-        const liftStateUp = noError || changeToError;
-
-        if (liftStateUp) {
-            console.log("Lift state up...");
-            callback(event);
-        };
+        if (isValueChanged) {
+            this.setState({ 
+                value: newValue
+            }, 
+                () => this.props.callback(newValue, newError)
+            );
+        };    
     };
 
-    onChangeHandler = event => this.handleChange(event, this.props.callback);
-    onSelectHandler = this.onChangeHandler;
-
-    // We need this method to refocus on the current input field because we loose focus after next button is enabled
-    reFocus = input => {
-        if (input) {
-            setTimeout(() => { input.focus() }, 100);
-        };
-    };
+    onChangeHandler = event => this.handleChange(event);
 
     render() {
         const { callback, onChange, onSelect, validator, error, defaultValue, inputRef,  ...allowedProps } = this.props;
         const { value } = this.state;
+
+        console.log("typeof value", typeof value);
         
         return (
             <DecoratedTextField
                 { ...allowedProps }
-                inputRef={ this.reFocus }
                 onChange={ this.onChangeHandler }
-                onSelect={ this.onSelectHandler }
                 error={ this.isError(value) }
                 defaultValue={ value }
             />

@@ -5,6 +5,8 @@ import produce from 'immer'; // https://github.com/mweststrate/immer: use for ha
 import valid from 'card-validator';
 
 import withStyles from '@material-ui/core/styles/withStyles';
+import restrictToClient from '../../../hoc/restrictToClient';
+
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
@@ -66,8 +68,7 @@ const noOfForms = forms.length;
 class Checkout extends Component {
     state = {
         activeStep: 0,
-        activeError: true,
-        isClient: false,
+        nextAllowed: false,
         UX : {
             date: null,
             start: null,
@@ -84,13 +85,31 @@ class Checkout extends Component {
                 success: false
             }
         },
-        nextAllowed: false,
         noOfUpdates: {
             contact: 0,
             address: 0,
             card: 0
         },
         user: {
+            error: { // initial state must mirror which fields are required
+                contact: {
+                    name: true,
+                    email: true
+                },
+                address: {
+                    addressLine1: true,
+                    addressLine2: false,
+                    city: true,
+                    zip: true,
+                    country: true
+                },
+                card: { 
+                    name: true,
+                    number: true,
+                    expiry: true,
+                    cvc: true
+                }
+            },
             draft: {
                 contact: {
                     name: '',
@@ -102,7 +121,7 @@ class Checkout extends Component {
                     addressLine2: '',
                     city: '',
                     zip: '',
-                    country: ''
+                    country: 'Netherlands'
                 },
                 card: { 
                     name: '',
@@ -110,34 +129,12 @@ class Checkout extends Component {
                     expiry: '',
                     cvc: ''
                 },
-            },    
-            commit: {
-                contact: {
-                    name: '',
-                    email: '',
-                    subscribe: true,
-                },
-                address: {
-                    addressLine1: '',
-                    addressLine2: '',
-                    city: '',
-                    zip: '',
-                    country: ''
-                },
-                card: { 
-                    name: '',
-                    number: '',
-                    expiry: '',
-                    cvc: ''
-                }
             }    
         }
     };
 
     // This lifecycle method only gets called client side
     componentDidMount() {
-        // Use it to restrict credit card information to the client only
-        this.setState({ isClient: true });
         // Set start time of user input
         const currentDate = new Date();
         const start = currentDate.getTime();
@@ -147,95 +144,75 @@ class Checkout extends Component {
 
     shouldComponentUpdate(nextProps, nextState) {
        // State in this component does not capture view data, hence no updates necessary on this component level
-       return true; //nextState.isClient;
+       const nextAllowedChanged = !(nextState.nextAllowed === this.state.nextAllowed);
+       const activeStepChanged = !(nextState.activeStep === this.state.activeStep);
+       
+       const shouldUpdate = nextAllowedChanged || activeStepChanged; 
+       
+       return shouldUpdate;
     };
     
-    isFormDataCorrect = (form) => {
-        console.log("Checking form data... (form, activeStep)=", form, this.state.activeStep);
+    isFormDataCorrect = () => {
+        const form = this.getForm(this.state.activeStep);
+        const errorState = this.state.user.error[form];
+        const isCorrect = !(Object.values(errorState).reduce((acc, val) => acc || val));
+        
+        //console.log("errorState=", errorState);
 
-        switch (form) {
-            case 'contact': {
-                const { name, email } = this.state.user.draft[form];
-                return !(name === '' || email === ''); 
-            };    
-            case 'address': {
-                const { addressLine1, city, zip, country } = this.state.user.draft[form];
-                return !(addressLine1 === '' || city ==='' || zip ==='' || country ==='');
-            };
-            case 'card': {
-                const { name, number, expiry, cvc } = this.state.user.draft[form];
-                return !(name === '' || number === '' || expiry === '' || cvc === '');
-            };
-            default: {
-                console.log("Form data check for this form has not be defined.");   
-                return null;
-            };     
-        };
+        return isCorrect;
     };
 
     setNextAllowed = (allow) => {
         const change = !(this.state.nextAllowed === allow);
 
         if (change) {
-            console.log("Change next button state.");
             this.setState({ nextAllowed: allow });
         };
     };
 
     allowMoveToNextForm = () => {
-        console.log("Allow move to next form.");
         this.setNextAllowed(true);
     };
 
     disallowMoveToNextForm = () => {
-        console.log("Disallow move to next form.");
         this.setNextAllowed(false);
     };
 
-    handleChange = form => (event, name)  => {
-        const isCheckbox = (name === "subscribe");
-        const newValue = isCheckbox ? event.target.checked : event.target.value;
-        
-        const oldValue = this.state.user.draft[form][name];
+    handleChange = (value, error, name) => {
+        //const isCheckbox = (name === "subscribe");
+        const newValue = value; // boolean or string //isCheckbox ? event.target.checked : event.target.value;
 
-        const changed = !(newValue === oldValue);
-        console.log("form, name, oldValue, newValue, changed=", form, name, oldValue, newValue, changed);
+        const form = this.getCurrentForm();
 
-        if (changed) {
-            this.setState(
-                produce(immerDraft => {
-                    console.log("Change draft state");
-                    immerDraft.user.draft[form][name] = newValue; 
-                    console.log("immerDraft.user.draft[form][name]", immerDraft.user.draft[form][name]);
-                }), 
-                () => {
-                    // Check whether form data are now correct. Since local state has been checked if it exists we only need to check existence 
-                    console.log("this.state.user.draft[form][name]", this.state.user.draft[form][name]);
-                    const isAllDataCorrect = this.isFormDataCorrect(form);
-                    console.log("In callback...")
+        this.setState(
+            produce(immerDraft => {
+                // Make sure the error state of this input is updated
+                immerDraft.user.error[form][name] = error;
 
-                    if (isAllDataCorrect) {
-                        console.log("Data is correct...");
-                        this.setState(
-                            produce(immerDraft => {
-                                // Copy draft data to commit
-                                immerDraft.user.commit = this.state.user.draft;
-                                // Increment the number of updates for the current form
-                                immerDraft.noOfUpdates[form] += 1
-                            }),
-                            () => {
-                                // Allow move to next form
-                                this.allowMoveToNextForm();
-                            }
-                        );
-                    } else {
-                        // Disallow move to next form
-                        console.log("Do I get here?");
-                        this.disallowMoveToNextForm();
-                    };
-                }
-            );
-        };      
+                // Always change the draft value state
+                immerDraft.user.draft[form][name] = newValue;
+            }),
+            () => {
+                // Check whether the current form is now error free
+                const isCurrentFormErrorFree = this.isFormDataCorrect();
+
+                if (isCurrentFormErrorFree) {
+                    this.setState(
+                        produce(immerDraft => {
+                            // Increment the number of updates for the current form
+                            immerDraft.noOfUpdates[form] += 1;
+                        }), 
+                        () => {
+                            // Allow move to next form
+                            this.allowMoveToNextForm();
+                        }   
+                    );    
+                } else {
+                    // Disallow move to next form
+                    this.disallowMoveToNextForm();
+                };
+            }
+        );         
     };
 
     omiseTokenHandler = () => {
@@ -330,8 +307,6 @@ class Checkout extends Component {
     step = flag => (flag ? 1 : -1);
 
     handleFormChange = (forward, correct) => {
-        console.log("handleFormChange: correct=", correct);
-
         this.setState(state => ({
             activeStep: state.activeStep + this.step(forward)
         }), () => {
@@ -342,11 +317,10 @@ class Checkout extends Component {
     isReviewStep = () => (this.state.activeStep === noOfSteps - 2);
     isConfirmationStep = () => (this.state.activeStep === noOfSteps - 1);
 
-    getForm = (step) => {
-        return forms[step];
-    };
+    getForm = (step) => forms[step];
 
     getCurrentForm = () => this.getForm(this.state.activeStep);
+
     getNextForm = () => this.getForm(this.state.activeStep + 1);
 
     canMoveToNextForm = () => {
@@ -376,7 +350,6 @@ class Checkout extends Component {
         const { activeStep } = this.state;
 
         return (
-            (this.state.isClient) ?  
             <Fragment>
                 <OmiseScriptHead />
                 <AppBar position="absolute" color="primary" className={ classes.appBar }>
@@ -395,17 +368,16 @@ class Checkout extends Component {
                         <StepForm 
                             classes={ classes.buttons }
                             activeStep={ activeStep }
-                            noOfUpdates={ this.state.noOfUpdates }
                             formData={ this.state.user.draft }
                             handleBack={ this.handleBack }
                             handleNext={ this.handleNext }
                             onChange={ this.handleChange }
-                            nextAllowed={ this.state.nextAllowed }
+                            nextAllowed={ this.state.nextAllowed } // nextAllowed is derived state
                             noOfSteps = { noOfSteps }
                         />
                     </Paper>
                 </main>
-            </Fragment> : null
+            </Fragment> 
         );
     };
 };
@@ -414,4 +386,4 @@ Checkout.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Checkout);
+export default restrictToClient(withStyles(styles)(Checkout));

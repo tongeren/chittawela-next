@@ -1,4 +1,5 @@
 import { Fragment, Component } from 'react';
+import PropTypes from 'prop-types';
 
 import Grid from '@material-ui/core/Grid';
 import Cards from 'react-credit-cards';
@@ -15,8 +16,10 @@ const cardValidators = {
     number: value => valid.number(value).isValid,
     expiry: value => valid.expirationDate(value).isValid,
     cvc: number => cvc => {
-        const cvcLength = (number === '') ? 3 : valid.number(number).card.code.size;
-        const isValid = cvc.length === cvcLength;
+        const card = valid.number(number).card;
+        const isCardUndetermined = (card === null);
+        const cvcLength = (isCardUndetermined ? 3 : card.code.size);
+        const isValid = (cvc.length === cvcLength);
         return isValid;
     }
 };
@@ -41,28 +44,30 @@ class PaymentForm extends Component {
         };
     };
 
-    handleChange = (event, label) => {
-        this.setState({ [label]: event.target.value });
+    handleChange = (value, label) => {
+        this.setState({ [label]: value });
     };
 
     changeFocus = (label) => {
         this.setState({ focused: label });
     };
     
-    handler = (event, name) => {
+    handler = (value, error, name) => {
         const { onChange } = this.props;
+        //const value = event.target.value;
         // Get label of state
         const label = this.getPropName(name);
         // Change focus
         this.changeFocus(label);
         // Change local state
-        this.handleChange(event, label);
+        this.handleChange(value, label);
         // Change global state
-        onChange(event, label);
+        onChange(value, error, label);
     };
 
     render() {
         const { formData } = this.props;
+        const { number, name, expiry, cvc } = formData;
 
         // Initialize factory
         InputBoxFactory.init(this.handler);
@@ -74,25 +79,25 @@ class PaymentForm extends Component {
                 <Grid container spacing={24}>
                     <Grid item xs={12} md={6}>
                         { InputBoxFactory.build('cardNumber', { 
-                            defaultValue: formData.number,
+                            defaultValue: number,
                             validator: cardValidators.number
                         }) } 
                     </Grid>
                     <Grid item xs={12} md={6}>
                         { InputBoxFactory.build('cardName', { 
-                            defaultValue: formData.name,
+                            defaultValue: name,
                             validator: cardValidators.name 
                         }) } 
                     </Grid>
                     <Grid item xs={6} md={3}>
                         { InputBoxFactory.build('expiry', { 
-                            defaultValue: formData.expiry,
+                            defaultValue: expiry,
                             validator: cardValidators.expiry
                         }) } 
                     </Grid>
                     <Grid item xs={6} md={3}>
                         { InputBoxFactory.build('cvc', { 
-                            defaultValue: formData.cvc,
+                            defaultValue: cvc,
                             validator: cardValidators.cvc(this.state.number)  
                         }) } 
                     </Grid>
@@ -101,6 +106,17 @@ class PaymentForm extends Component {
         );
     };    
 };
+
+PaymentForm.propTypes = {
+    formData: PropTypes.shape({
+        number: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        expiry: PropTypes.string.isRequired,
+        cvc: PropTypes.string.isRequired
+    }),
+    onChange: PropTypes.func.isRequired
+};
+
 
 export default PaymentForm;
 
