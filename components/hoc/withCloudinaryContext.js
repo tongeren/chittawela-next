@@ -1,7 +1,7 @@
 import { CloudinaryContext } from 'cloudinary-react';
 
-export default (Component) => (props) => (
+export default (WrappedComponent) => (props) => (
     <CloudinaryContext cloudName="chittawela" secure>
-        <Component {...props}/>
+        <WrappedComponent {...props}/>
     </CloudinaryContext>
 );

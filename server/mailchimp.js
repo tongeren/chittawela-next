@@ -2,6 +2,7 @@
 'use strict';
 import request from 'request';
 import mailChimp from './mailchimp.config';
+import { logger } from '../components/helper/logger';
 
 export const addSingleSubscriberToList = async ({ user }) => { 
   const data = {
@@ -13,8 +14,7 @@ export const addSingleSubscriberToList = async ({ user }) => {
     }
   };
 
-  console.log(`Server-side API method addSingleSubscriberToList`);
-  console.log(`data: ${JSON.stringify(data)}`);
+  logger.log('info', 'addSingleSubscriberToList(): data=', data);
 
   const hash = {
     uri: mailChimp.listMembersUrl,
@@ -26,7 +26,7 @@ export const addSingleSubscriberToList = async ({ user }) => {
     body: data,
   };
 
-  console.log(`hash: ${JSON.stringify(hash)}`);
+  logger.log('info', 'addSingleSubscriberToList(): data=', data);
 
   await new Promise((resolve, reject) => {
     if (hash) {}
@@ -44,7 +44,5 @@ export const addSingleSubscriberToList = async ({ user }) => {
       },
     );
   });
-}
+};
 
-
-// Authorization: `Basic ${Buffer.from(`apikey:${mailChimp.apiKey}`).toString('base64')}`,

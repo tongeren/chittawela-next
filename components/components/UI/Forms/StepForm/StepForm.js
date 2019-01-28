@@ -12,6 +12,8 @@ const stepForm = (props) => {
     const { ...stepContentProps } = { step, formData, onChange };
     const { ...stepperButtonsProps } = { classes, activeStep, handleBack, handleNext, nextAllowed, noOfSteps };
 
+    console.log("StepForm rerender: activeStep=", activeStep);
+    
     return (
         <Fragment>
             <StepContent { ...stepContentProps } />

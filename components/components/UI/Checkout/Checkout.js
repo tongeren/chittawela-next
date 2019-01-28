@@ -6,18 +6,15 @@ import valid from 'card-validator';
 
 import withStyles from '@material-ui/core/styles/withStyles';
 import restrictToClient from '../../../hoc/restrictToClient';
+import withOmise from '../../../omise/withOmise/withOmise';
+import passToClient from '../../../hoc/passToClient';
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
 
+import CheckoutStepper from './CheckoutStepper/CheckoutStepper';
 import StepForm from '../Forms/StepForm/StepForm';
-
-import OmiseConfig from '../../../omise/omise.config';
-import OmiseScriptHead from '../../../omise/OmiseScriptHead/OmiseScriptHead';
 
 const styles = theme => ({
     appBar: {
@@ -33,9 +30,6 @@ const styles = theme => ({
         marginRight: 'auto',
         },
     },
-    step: {
-        
-    },
     paper: {
         marginTop: theme.spacing.unit * 3,
         marginBottom: theme.spacing.unit * 3,
@@ -45,9 +39,6 @@ const styles = theme => ({
             marginBottom: theme.spacing.unit * 6,
             padding: theme.spacing.unit * 3,
         },
-    },
-    stepper: {
-        padding: '0 0 0'
     },
     buttons: {
         display: 'flex',
@@ -59,8 +50,8 @@ const styles = theme => ({
     },
 });
 
-const steps = ['Contact', 'Address', 'Payment', 'Review', 'Confirmation'];
-const noOfSteps = steps.length;
+//const steps = ['Contact', 'Address', 'Payment', 'Review', 'Confirmation'];
+const noOfSteps = 5;
 
 const forms = ['contact', 'address', 'card'];
 const noOfForms = forms.length;
@@ -68,22 +59,11 @@ const noOfForms = forms.length;
 class Checkout extends Component {
     state = {
         activeStep: 0,
-        nextAllowed: false,
+        nextAllowed: true, // Change back later (derived state)
         UX : {
             date: null,
             start: null,
             end: null
-        },
-        omiseResponse: {
-            token: {
-                success: false,
-                id: null,
-                message: null,
-                code: null
-            },
-            charge: {
-                success: false
-            }
         },
         noOfUpdates: {
             contact: 0,
@@ -91,43 +71,43 @@ class Checkout extends Component {
             card: 0
         },
         user: {
-            error: { // initial state must mirror which fields are required
+            error: { 
                 contact: {
-                    name: true,
-                    email: true
+                    name: false,
+                    email: false
                 },
                 address: {
-                    addressLine1: true,
+                    addressLine1: false,
                     addressLine2: false,
-                    city: true,
-                    zip: true,
-                    country: true
+                    city: false,
+                    zip: false,
+                    country: false 
                 },
                 card: { 
-                    name: true,
-                    number: true,
-                    expiry: true,
-                    cvc: true
+                    name: false,
+                    number: false,
+                    expiry: false,
+                    cvc: false
                 }
             },
             draft: {
                 contact: {
-                    name: '',
-                    email: '',
+                    name: 'Duncan van Tongeren',
+                    email: 'dpvantongeren@gmail.com',
                     subscribe: true // Subscribe per default: let user opt out
                 },
                 address: {
-                    addressLine1: '',
+                    addressLine1: 'Anna Blamanplein 123',
                     addressLine2: '',
-                    city: '',
-                    zip: '',
+                    city: 'The Hague',
+                    zip: '2525 ZW',
                     country: 'Netherlands'
                 },
                 card: { 
-                    name: '',
-                    number: '',
-                    expiry: '',
-                    cvc: ''
+                    name: 'DP VAN TONGEREN',
+                    number: '4242 4242 4242 4242',
+                    expiry: '10/20',
+                    cvc: '979'
                 },
             }    
         }
@@ -152,12 +132,9 @@ class Checkout extends Component {
        return shouldUpdate;
     };
     
-    isFormDataCorrect = () => {
-        const form = this.getForm(this.state.activeStep);
+    isFormDataCorrect = (form) => {
         const errorState = this.state.user.error[form];
         const isCorrect = !(Object.values(errorState).reduce((acc, val) => acc || val));
-        
-        //console.log("errorState=", errorState);
 
         return isCorrect;
     };
@@ -179,8 +156,7 @@ class Checkout extends Component {
     };
 
     handleChange = (value, error, name) => {
-        //const isCheckbox = (name === "subscribe");
-        const newValue = value; // boolean or string //isCheckbox ? event.target.checked : event.target.value;
+        const newValue = value; // boolean or string 
 
         const form = this.getCurrentForm();
 
@@ -194,7 +170,7 @@ class Checkout extends Component {
             }),
             () => {
                 // Check whether the current form is now error free
-                const isCurrentFormErrorFree = this.isFormDataCorrect();
+                const isCurrentFormErrorFree = this.isFormDataCorrect(form);
 
                 if (isCurrentFormErrorFree) {
                     this.setState(
@@ -215,91 +191,53 @@ class Checkout extends Component {
         );         
     };
 
-    omiseTokenHandler = () => {
-        'use strict';
-
-        if (!this.state.isClient) {
-            return; // Do not attempt to checkout server side
-        };
-    
-        Omise.setPublicKey(OmiseConfig.publicKey);
-        
-        const expiry = valid.expirationDate(this.state.user.commit.card.expiry);
-        if (!expiry.isValid) {
+    transformedCardData = () => {
+        const { number, name, expiry, cvc } = { ...this.state.user.draft.card };
+        const expiryDate = valid.expirationDate(expiry);
+        if (!expiryDate.isValid) {
             console.log("Credit card expiration date is invalid.");
             return; 
         };
 
-        const month = expiry.month;
-        const year = expiry.year;
+        const month = Number(expiryDate.month);
+        const year = Number(expiryDate.year);
 
         const cardInformation = {
-            name:             this.state.user.commit.card.name,
-            number:           this.state.user.commit.card.number,
+            name:             name,
+            number:           number,
             expiration_month: month,
             expiration_year:  year,
-            security_code:    this.state.user.commit.card.cvc
+            security_code:    cvc
         };
-        
-        Omise.createToken('card', cardInformation, (statusCode, response) => {
-            if (statusCode === 200) {
-                // Success: send back the TOKEN_ID to your server. The TOKEN_ID can be
-                // found in `response.id`.
-                this.setState({ omiseResponse: 
-                    { ...omiseResponse, 
-                        token: 
-                        { ...token,
-                            success: true,
-                            id: response.id
-                        }
-                    }    
-                });
-            }
-            else {
-                // Error: display an error message. Note that `response.message` contains
-                // a preformatted error message. Also note that `response.code` will be
-                /*
-                "authentication_failure" "authentication failed"
-                "bad_request" "type is currently not supported"
-                "expired_charge" "charge expired"
-                "failed_capture" "Charge is not authorized"
-                "failed_void" "void failed"
-                "invalid_amount" "amount must be an integer"
-                "invalid_bank_account" "brand is not included in the list"
-                "invalid_card" "number is invalid and brand not supported (unknown)"
-                "invalid_card_token" "invalid card token"
-                "invalid_charge" "currency is currently not supported and amount is not a number"
-                "invalid_filter" "invalid filters"
-                "invalid_link" "currency is not currently supported"
-                "invalid_page" "invalid page"
-                "invalid_scope" "invalid scope"
-                "missing_card" "request contains no card parameters"
-                "not_found" "Customer cust_test_000000000000 was not found"
-                "used_token" "token was already used"
-                "service_not_found" "you are using api version which does not support this operation"
-                */
-                this.setState({ omiseResponse: 
-                    { ...omiseResponse, 
-                        token: 
-                        { ...token,
-                            success: false,
-                            message: response.message, 
-                            code: message.code     
-                        }        
-                    }
-                });
-            }
-        });
+
+        return cardInformation;
     };
 
-    purchaseHandler = () => {
-        // Get Omise token
-        this.omiseTokenHandler();
-        
-        if (this.state.omiseResponse.success) {
+    purchaseHandler = async () => {
+        console.log("Checkout: purchaseHandler() starts...");
+        let omiseTokenResponse = {};
+
+        // Transform card data
+        const cardInformation = this.transformedCardData();
+        console.log("cardInformation", cardInformation);
+
+        omiseTokenResponse = await this.props.omiseTokenHandler(cardInformation);
+        console.log("omiseResponse=", omiseTokenResponse);
+
+        const tokenObtained = omiseTokenResponse.success; 
+        if (tokenObtained) {
+            // Get token
+            const token = omiseTokenResponse.id;
             // Charge card via Omise 
-            this.omiseChargeCardHandler();
+            console.log("About to charge card..., token=", token);
+
+            const omiseChargeResponse = await this.props.omiseChargeCardHandler(token);
         } else {
+            // Handle credit card errors 
+            // Get Omise error message
+            const errorMessage = omiseTokenResponse.message;
+            
+            console.log("Error occurred..., errorMessage=", errorMessage);
             return;
         };    
     };
@@ -333,6 +271,7 @@ class Checkout extends Component {
     handleNext = () => {
         // If in review the next button has been clicked, then start purchase
         if  (this.isReviewStep()) {
+            console.log("Checkout: handleNext() triggered...");
             this.purchaseHandler();
         };
 
@@ -347,27 +286,19 @@ class Checkout extends Component {
 
     render() {
         const { classes } = this.props;
-        const { activeStep } = this.state;
 
         return (
             <Fragment>
-                <OmiseScriptHead />
                 <AppBar position="absolute" color="primary" className={ classes.appBar }>
                     <Toolbar>
-                        <Stepper activeStep={ activeStep } className={ classes.stepper }>
-                            { steps.map((label, i) => (
-                                <Step key={i} className = { classes.step }>
-                                    <StepLabel>{ activeStep === i ? label : null }</StepLabel>
-                                </Step>
-                            )) }
-                        </Stepper>
+                        <CheckoutStepper activeStep={ this.state.activeStep }/> 
                     </Toolbar>
                 </AppBar>
                 <main className={ classes.layout }>
                     <Paper className={ classes.paper }>
                         <StepForm 
                             classes={ classes.buttons }
-                            activeStep={ activeStep }
+                            activeStep={ this.state.activeStep }
                             formData={ this.state.user.draft }
                             handleBack={ this.handleBack }
                             handleNext={ this.handleNext }
@@ -383,7 +314,60 @@ class Checkout extends Component {
 };
 
 Checkout.propTypes = {
-  classes: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired, // Must be wrapped by withStyles
+    isClient: PropTypes.bool.isRequired, // Must be wrapped by restrictToClient
+    omiseTokenHandler: PropTypes.func.isRequired, // Must be wrapped by withOmise
+    omiseChargeCardHandler: PropTypes.func.isRequired
 };
 
-export default restrictToClient(withStyles(styles)(Checkout));
+export default passToClient(
+    restrictToClient(
+        withOmise(
+            withStyles(styles)(Checkout)
+        )
+    )
+);
+
+/*
+
+        user: {
+            error: { 
+                contact: {
+                    name: true,
+                    email: true
+                },
+                address: {
+                    addressLine1: true,
+                    addressLine2: false,
+                    city: true,
+                    zip: true,
+                    country: false 
+                },
+                card: { 
+                    name: true,
+                    number: true,
+                    expiry: true,
+                    cvc: true
+                }
+            },
+            draft: {
+                contact: {
+                    name: '',
+                    email: '',
+                    subscribe: true // Subscribe per default: let user opt out
+                },
+                address: {
+                    addressLine1: '',
+                    addressLine2: '',
+                    city: '',
+                    zip: '',
+                    country: 'Netherlands'
+                },
+                card: { 
+                    name: '',
+                    number: '',
+                    expiry: '',
+                    cvc: ''
+                },
+            } 
+*/

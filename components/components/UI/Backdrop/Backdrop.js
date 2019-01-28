@@ -1,9 +1,13 @@
-import { Fragment } from 'react';
+// import { Fragment } from 'react';
+import PropTypes from 'prop-types';
 
-const backdrop = (props) => (
+// Changed top level Fragment to div to make this component testable with Enzyme
+// See https://github.com/airbnb/enzyme/issues/1799, open issue as of 2019/01/28
+
+const backdrop = props => (
   props.show ? 
-    <Fragment> 
-      <div className={"Backdrop"} onClick={props.clicked}></div>
+    <div> 
+      <div className={ "Backdrop" } onClick={ props.clicked }></div>
       <style jsx>{`
         .Backdrop {
           width: 100%;
@@ -16,9 +20,12 @@ const backdrop = (props) => (
         } 
       `}
       </style>
-    </Fragment> : null
+    </div> : null
 );  
 
-
+backdrop.propTypes={
+  show: PropTypes.bool.isRequired,
+  clicked: PropTypes.func.isRequired
+};
 
 export default backdrop;

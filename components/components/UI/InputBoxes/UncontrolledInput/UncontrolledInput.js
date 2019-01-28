@@ -40,17 +40,14 @@ class UncontrolledInput extends Component {
     onChangeHandler = event => this.handleChange(event);
 
     render() {
-        const { callback, onChange, onSelect, validator, error, defaultValue, inputRef,  ...allowedProps } = this.props;
-        const { value } = this.state;
-
-        console.log("typeof value", typeof value);
+        const { callback, onChange, onSelect, validator, error, defaultValue,  ...allowedProps } = this.props;
         
         return (
             <DecoratedTextField
                 { ...allowedProps }
                 onChange={ this.onChangeHandler }
-                error={ this.isError(value) }
-                defaultValue={ value }
+                error={ this.isError(this.state.value) }
+                defaultValue={ this.state.value }
             />
         );
     };

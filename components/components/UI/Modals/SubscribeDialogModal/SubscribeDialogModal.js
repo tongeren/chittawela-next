@@ -1,14 +1,16 @@
 import { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
 
-import { subscribeToNewsletter } from '../../../../lib/api/public'; /* client side API method */
-import { isValidEmailAddress, isValidName } from '../../../validation/validation';
+import SubscribeDialogButtons from './SubscribeDialogButtons/SubscribeDialogButtons';
+
+import { subscribeToNewsletter } from '../../../../../lib/api/public'; /* client side API method */
+import { logger } from '../../../../helper/logger';
+//import { ClientSideApiRequest } from '../../../../../lib/api/api.functions';
+import { isValidEmailAddress, isValidName } from '../../../../validation/validation';
 
 const dialogTitleText = "Please tell me more!";
 const subscribeDialogText = "Yes! I want to change my life and live from the heart!";
@@ -19,7 +21,9 @@ const presetName = "Duncan van Tongeren";
 const presetEmailAddress = "isarastudio@gmail.com";
 const testWithoutSubscribing = true;
 
-export default class SubscribeDialog extends Component {
+//const subscribeToNewsletter = ClientSideApiRequest.build('addSingleSubscriberToList');
+
+export default class SubscribeDialogModal extends Component {
     state = {
         dialogOpen: this.props.show,
         user: {
@@ -32,9 +36,11 @@ export default class SubscribeDialog extends Component {
         this.handleClose();
     }
 
-    subscribeButtonClickedHandler = async (event) => {        
-        if (!this.isValidSubscriptionInfo()) { return; };
+    subscribeButtonClickedHandler = async (event) => {    
+        console.log("SubscribeDialog.subscribeButtonClickedHandler:");
 
+        if (!this.isValidSubscriptionInfo()) { return; };
+        
         event.preventDefault();
 
         try {
@@ -46,6 +52,8 @@ export default class SubscribeDialog extends Component {
                 lastName: last,
                 email: this.state.user.email
             };
+
+            logger.log('info', 'SubscribeDialog.subscribeButtonClickedHandler: user= %j', user);
 
             if (!testWithoutSubscribing) {
                 await subscribeToNewsletter({ user });
@@ -67,8 +75,6 @@ export default class SubscribeDialog extends Component {
         this.props.closeSubscribeDialog();
     };
   
-    
-
     isValidSubscriptionInfo = () => {
         const isName = isValidName(this.state.user.name);
         const isEmail = isValidEmailAddress(this.state.user.email);
@@ -79,6 +85,8 @@ export default class SubscribeDialog extends Component {
     };
 
     render() {
+        logger.log('info', 'SubscribeDialogModal: rendering..., this.props.show= %j', this.props.show);
+
         let subscribeDialogJSX =
             <div>
                 <Dialog
@@ -115,23 +123,13 @@ export default class SubscribeDialog extends Component {
                             value={ this.state.user.email }
                         />
                     </DialogContent>
-                <DialogActions>
-                    <Button 
-                        onClick={this.cancelButtonClickedHandler} 
-                        color="secondary" 
-                        autoFocus={!this.isValidSubscriptionInfo()} >
-                        Cancel
-                    </Button>
-                    <Button 
-                        onClick={this.subscribeButtonClickedHandler} 
-                        color="secondary" 
-                        autoFocus={this.isValidSubscriptionInfo()}
-                        disabled={!this.isValidSubscriptionInfo()} >
-                        Subscribe
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </div>;
+                    <SubscribeDialogButtons
+                        handleCancel={ this.cancelButtonClickedHandler }
+                        handleSubscribe={ this.subscribeButtonClickedHandler }
+                        validationStatus={ this.isValidSubscriptionInfo() } 
+                    />
+                </Dialog>
+            </div>;
     
         return ( (this.props.show && this.state.dialogOpen) ? subscribeDialogJSX : null );
     }    

@@ -1,8 +1,8 @@
 import Layout from '../../layouts/Layout';
 
-export default (Component) => (props) => (
+export default (WrappedComponent) => (props) => (
     <Layout>
-        <Component {...props}/>
+        <WrappedComponent {...props}/>
     </Layout>
 );
 

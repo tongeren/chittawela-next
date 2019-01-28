@@ -1,7 +1,8 @@
 import { Component } from 'react';
+import getDisplayName from '../helper/getDisplayName';
 
-export default (WrappedComponent) => {
-    return class extends Component {
+const restrictToClient = (WrappedComponent) => {
+    class RestrictedToClient extends Component {
         state = {
             isClient: false
         };
@@ -12,7 +13,14 @@ export default (WrappedComponent) => {
         };
 
         render() {
-            return this.state.isClient ? <WrappedComponent {...this.props} /> : null; 
+            return this.state.isClient ? <WrappedComponent { ...this.props } isClient={ true }/> : null; 
         };
-    };    
+    };
+
+    RestrictedToClient.displayName = `restrictToClient(${getDisplayName(WrappedComponent)})`;
+
+    return RestrictedToClient;
 };
+
+export default restrictToClient;
+

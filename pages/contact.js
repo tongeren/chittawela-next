@@ -1,6 +1,5 @@
 // import withLayout from '../components/hoc/withLayout';
 import Layout from '../layouts/Layout';
-// import classes from './contact.module.css';
 
 export default () => (
   <Layout>

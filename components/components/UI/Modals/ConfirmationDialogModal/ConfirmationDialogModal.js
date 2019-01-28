@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Button from '@material-ui/core/Button';
+
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -8,7 +8,9 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 
-class ConfirmationDialog extends React.Component {
+import CloseButton from '../../Buttons/CloseButton/CloseButton';
+
+class ConfirmationDialogModal extends React.Component {
   state = {
     dialogOpen: this.props.show,
   };
@@ -36,9 +38,7 @@ class ConfirmationDialog extends React.Component {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleClose} color="secondary" autoFocus>
-                Close
-            </Button>
+            <CloseButton clicked={ this.handleClose } autoFocusStatus={ true } /> 
           </DialogActions>
         </Dialog>
       </div>;
@@ -48,8 +48,8 @@ class ConfirmationDialog extends React.Component {
   }
 }
 
-ConfirmationDialog.propTypes = {
+ConfirmationDialogModal.propTypes = {
   fullScreen: PropTypes.bool.isRequired,
 };
 
-export default withMobileDialog()(ConfirmationDialog);
+export default withMobileDialog()(ConfirmationDialogModal);
