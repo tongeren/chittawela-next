@@ -1,8 +1,7 @@
 import { Fragment, Component } from 'react';
 import CarouselContent from './CarouselContent/CarouselContent';
-import SubscribeDialog from '../../components/UI/Dialogs/SubscribeDialog/SubscribeDialog';
-import ConfirmationDialog from '../../components/UI/Dialogs/ConfirmationDialog/ConfirmationDialog';
-import Slides from './Slides/Slides';
+import SubscribeDialog from '../Dialogs/SubscribeDialog/SubscribeDialog';
+import ConfirmationDialog from '../Dialogs/ConfirmationDialog/ConfirmationDialog';
 import slidesData from './SlidesData';
 
 class LandingPageCarousel extends Component {
@@ -33,11 +32,10 @@ class LandingPageCarousel extends Component {
         return(  
             <Fragment>
                 <CarouselContent 
-                    clicked={ !showSubscribeDialog }
+                    clicked={ showSubscribeDialog }
                     onClickHandler={ () => this.openSubscribeDialogHandler() } 
-                >
-                    <Slides slidesData={ slidesData }/>
-                </CarouselContent>  
+                    slidesData={ slidesData }
+                />  
                 <SubscribeDialog
                     showDialog={ showSubscribeDialog }
                     onCloseHandler={ () => this.closeSubscribeDialogHandler() }
@@ -53,3 +51,4 @@ class LandingPageCarousel extends Component {
 };
 
 export default LandingPageCarousel;
+

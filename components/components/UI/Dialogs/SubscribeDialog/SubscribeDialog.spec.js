@@ -1,12 +1,14 @@
+import sinon from 'sinon';
 import SubscribeDialog from './SubscribeDialog';
 
-const doNothing = () => {};
-
 const setup = () => {
+    const closeCallback = sinon.spy();
+    const subscribeCallback = sinon.spy();
+
     const props = {
         showDialog: true,
-        onCloseHandler: doNothing,
-        onSubscribeHandler: doNothing
+        onCloseHandler: closeCallback,
+        onSubscribeHandler: subscribeCallback
     };
 
     const state = {
@@ -30,7 +32,12 @@ const setup = () => {
 };
 
 describe('<SubscribeDialog />', () => {
-    const { wrapper } = setup();       
+    const { props, wrapper } = setup();       
+    
+    afterEach(() => {
+        // Restore the default sandbox here in order to not get memory leaks
+        sinon.restore();
+    });       
     
     it.skip(`debug`, () => {
         console.log(wrapper.debug());
@@ -46,11 +53,20 @@ describe('<SubscribeDialog />', () => {
         expect(wrapper.children().map(node => node.name())).toStrictEqual(childNames);
     });
 
-    // const inside = wrapper.at(0);
-
-    // console.log(inside.debug());
-
     // User interactions:
-
+    /*
+    it(`if the user clicks the button, then the handler is called`, () => {
+        const buttonsWrapper = shallow(wrapper.prop('buttons'));
+        console.log(buttonsWrapper.debug());
+        const cancelButtonWrapper = buttonsWrapper.childAt(0).dive();
+        console.log(cancelButtonWrapper.debug());
+        const subscribeButtonWrapper = buttonsWrapper.childAt(1).dive();
+        console.log(subscribeButtonWrapper.debug());
+        subscribeButtonWrapper.simulate('click');
+        sinon.assert.called(props.onCloseHandler);
+        subscribeButtonWrapper.simulate('click');
+        sinon.assert.called(props.onSubscribeHandler);
+    });
+    */
 
 });

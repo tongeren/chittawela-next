@@ -7,14 +7,16 @@ import SubscribeButton from '../SubscribeButton/SubscribeButton';
 const SubscribeDialogButtons = props => {
     const { handleCancel, handleSubscribe, validationStatus } = props;
 
+    console.log("SubscribeDialogButtons: handleCancel=", handleCancel);
+
     return (
         <Fragment>
             <CancelButton 
-                clicked={ handleCancel }
+                handler={ handleCancel }
                 autoFocusStatus={ !validationStatus }
             />
             <SubscribeButton
-                clicked={ handleSubscribe }
+                handler={ handleSubscribe }
                 autoFocusStatus={ validationStatus } 
                 disableStatus={ !validationStatus }
             />

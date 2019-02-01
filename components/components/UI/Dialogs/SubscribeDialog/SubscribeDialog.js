@@ -96,14 +96,14 @@ class SubscribeDialog extends Component {
                 show={ showDialog }
                 onCloseHandler={ onCloseHandler }
                 title={ dialogTitleText }
-                buttons={   <SubscribeDialogButtons
-                                handleCancel={ onCloseHandler }
-                                handleSubscribe={ () => this.subscribeHandler }
-                                validationStatus={ this.isValidSubscriptionInfo() } 
-                            />  }
+                buttons={       <SubscribeDialogButtons
+                                    handleCancel={ onCloseHandler }
+                                    handleSubscribe={ () => this.subscribeHandler() }
+                                    validationStatus={ this.isValidSubscriptionInfo() } 
+                                />  }
             >
                 <MuiDialogContentText>{ subscribeDialogText }</MuiDialogContentText>
-                <EmptyBox width={'80vw'} height={'2vh'}/>
+                <EmptyBox width={'60vw'} height={'1vh'}/>
                 {   InputBoxFactory.build('name', { 
                         margin: 'normal', 
                         label: fullNameInputFieldText, 

@@ -1,10 +1,11 @@
+import sinon from 'sinon';
 import CloseButton from './CloseButton';
 
-const doNothing = () => {};
-
 const setup = () => {
+    const clickCallback = sinon.spy();
+
     const props = {
-        clicked: doNothing, 
+        handler: clickCallback, 
         autoFocusStatus: true
     };
 
@@ -17,7 +18,12 @@ const setup = () => {
 };
 
 describe('<CloseButton />', () => {
-    const { wrapper } = setup();       
+    const { props, wrapper } = setup();       
+    
+    afterEach(() => {
+        // Restore the default sandbox here in order to not get memory leaks
+        sinon.restore();
+    });
     
     it.skip(`debug`, () => {
         console.log(wrapper.debug());
@@ -25,6 +31,11 @@ describe('<CloseButton />', () => {
 
     it(`should render a component <WithStyles(withStylingContextConsumer(Button)) /> at the top of the DOM tree`, () => {
         expect(wrapper.name()).toBe('WithStyles(withStylingContextConsumer(Button))');
+    });
+
+    it(`if the user clicks the button, then the handler is called`, () => {
+        wrapper.simulate('click');
+        sinon.assert.called(props.handler);
     });
 
 });

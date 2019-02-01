@@ -14,7 +14,7 @@ const ConfirmationDialog = props => {
             show={ showDialog }
             onCloseHandler={ onCloseHandler }
             title={ subscriptionSuccessTitle }
-            buttons={ <CloseButton clicked={ onCloseHandler } autoFocusStatus={ true } /> }
+            buttons={ <CloseButton handler={ onCloseHandler } clicked={ onCloseHandler } autoFocusStatus={ true } /> }
         >
             <MuiDialogContentText>{ subscriptionSuccessMessage }</MuiDialogContentText>
         </Dialog>  

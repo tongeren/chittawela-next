@@ -1,11 +1,12 @@
+import sinon from 'sinon';
 import Dialog from './Dialog';
 
-const doNothing = () => {};
-
 const setup = () => {
+    const clickCallback = sinon.spy();
+
     const props = {
         show: true,
-        onCloseHandler: doNothing,
+        onCloseHandler: clickCallback,
         title: '',
         children: '',
         buttons: ''
@@ -20,7 +21,12 @@ const setup = () => {
 };
 
 describe('<Dialog />', () => {
-    const { wrapper } = setup();       
+    const { props, wrapper } = setup();       
+    
+    afterEach(() => {
+        // Restore the default sandbox here in order to not get memory leaks
+        sinon.restore();
+    });      
     
     it.skip(`debug`, () => {
         console.log(wrapper.debug());

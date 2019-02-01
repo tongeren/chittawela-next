@@ -1,11 +1,13 @@
+import sinon from 'sinon';
 import SubscribeDialogButtons from './SubscribeDialogButtons';
 
-const doNothing = () => {};
-
 const setup = () => {
+    const cancelCallback = sinon.spy();
+    const subscribeCallback = sinon.spy();
+
     const props = {
-        handleCancel: doNothing,
-        handleSubscribe: doNothing, 
+        handleCancel: cancelCallback,
+        handleSubscribe: subscribeCallback, 
         validationStatus: true
     };
 
@@ -17,8 +19,13 @@ const setup = () => {
     };
 };
 
-describe('<SubscribeDialog />', () => {
-    const { wrapper } = setup();       
+describe('<SubscribeDialogButtons />', () => {
+    const { props, wrapper } = setup();       
+    
+    afterEach(() => {
+        // Restore the default sandbox here in order to not get memory leaks
+        sinon.restore();
+    });    
     
     it.skip(`debug`, () => {
         console.log(wrapper.debug());
@@ -32,6 +39,16 @@ describe('<SubscribeDialog />', () => {
     
     it(`the children wrapped by <Fragment /> are ${ childNames.join() }`, () => {
         expect(wrapper.children().map(node => node.name())).toStrictEqual(childNames);
+    });
+
+    it(`if the user clicks the CancelButton, then handleCancel is called`, () => {
+        wrapper.childAt(0).dive().simulate('click');
+        sinon.assert.called(props.handleCancel);
+    });
+
+    it(`if the user clicks the SubscribeButton, then handleSubscribe is called`, () => {
+        wrapper.childAt(1).dive().simulate('click');
+        sinon.assert.called(props.handleSubscribe);
     });
 
 });

@@ -4,21 +4,20 @@
 //      
 // If you want to write it to the DOM, pass a string instead: mobile="true" or mobile={value.toString()}.
 // in p (at CarouselContent.spec.js:11) ...
-
-import { mount } from 'enzyme';
+import sinon from 'sinon';
 import CarouselContent from './CarouselContent';
 
-const doNothing = () => {};
-
 const setup = () => {
+    const clickCallback = sinon.spy();
+ 
     const props = {
         classes: {},
-        startButtonClickedStatus: true, 
-        startButtonClickedHandler: doNothing,
-        children: <p></p>
+        clicked: false,
+        onClickHandler: clickCallback,
+        children: <p />
     };
 
-    const wrapper = mount(<CarouselContent { ...props } />);
+    const wrapper = shallow(<CarouselContent { ...props } />);
     
     return {
         props,
@@ -27,19 +26,15 @@ const setup = () => {
 };
 
 // Skip for now, see remarks at the top of this file
-describe.skip('<CarouselContent />', () => {
+describe('<CarouselContent />', () => {
     const { wrapper } = setup();       
     
-    it(`debug`, () => {
+    it.skip(`debug`, () => {
         console.log(wrapper.debug());
     });
 
-    it(`should contain a component '<CarouselContent />'`, () => {
-        expect(wrapper).toContainMatchingElement('CarouselContent');
-    });
-
-    it(`should contain a component '<AutoRotatingCarousel />'`, () => {
-        expect(wrapper).toContainMatchingElement('AutoRotatingCarousel');
+    it(`should render a component '<CarouselContent />' at the top of the DOM tree`, () => {
+        expect(wrapper.name()).toBe('CarouselContent');
     });
     
 });

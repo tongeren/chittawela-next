@@ -1,3 +1,4 @@
+// Button is meant as purely a presentational component: no functionality is provided here
 import PropTypes from 'prop-types';
 import MuiButton from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
@@ -18,6 +19,7 @@ const Button = props => {
 };
 
 Button.propTypes={
+    classes: PropTypes.object.isRequired,
     style: PropTypes.shape({
         color: PropTypes.oneOf(['default', 'inherit', 'primary', 'secondary']).isRequired,
         size: PropTypes.oneOf(['small','medium', 'secondary']).isRequired,
