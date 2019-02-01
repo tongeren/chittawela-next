@@ -23,29 +23,13 @@ describe('<ConfirmationDialog />', () => {
         console.log(wrapper.debug());
     });
 
-    it(`should contain a component '<WithStyles(Dialog) />'`, () => {
-        expect(wrapper.name()).toBe('WithStyles(Dialog)');
+    it(`should render a component <withStylingContextProvider(Dialog) /> at the top of the DOM tree`, () => {
+        expect(wrapper.name()).toBe('withStylingContextProvider(Dialog)');
     });
 
-    it(`the first child wrapped within <WithStyles(Dialog) /> should be the component '<WithStyles(DialogTitle) />'`, () => {
-        expect(wrapper.childAt(0).name()).toBe('WithStyles(DialogTitle)');
+    it(`the only one child wrapped within <withStylingContextProvider(Dialog) /> should be the component '<WithStyles(DialogContentText) />'`, () => {
+        expect(wrapper.children().name()).toBe('WithStyles(DialogContentText)');
     });
 
-    it(`the second child wrapped within <WithStyles(Dialog) /> should be the component '<WithStyles(DialogContent) />'`, () => {
-        expect(wrapper.childAt(1).name()).toBe('WithStyles(DialogContent)');
-    });
-
-    it(`'<WithStyles(DialogContent) />' should wrap a component <WithStyles(DialogContentText) />`, () => {
-        expect(wrapper.childAt(1).children().name()).toBe('WithStyles(DialogContentText)');
-    });
-
-    it(`the third child wrapped within <WithStyles(Dialog) /> should be the component '<WithStyles(DialogActions) />'`, () => {
-        expect(wrapper.childAt(2).name()).toBe('WithStyles(DialogActions)');
-    });
-
-    it(`'<WithStyles(DialogActions) />' should wrap a component <CloseButton />`, () => {
-        expect(wrapper.childAt(2).children().name()).toBe('CloseButton');
-    });
-    
 });
 

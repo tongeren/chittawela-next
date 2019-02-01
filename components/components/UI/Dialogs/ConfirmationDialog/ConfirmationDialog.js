@@ -1,11 +1,6 @@
 import PropTypes from 'prop-types';
-
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-
+import MuiDialogContentText from '@material-ui/core/DialogContentText';
+import Dialog from '../Dialog/Dialog';
 import CloseButton from '../../Buttons/CloseButton/CloseButton';
 
 const subscriptionSuccessTitle = "Thank you!"
@@ -15,15 +10,14 @@ const ConfirmationDialog = props => {
     const { showDialog, onCloseHandler } = props;
 
     return (
-        <Dialog open={ showDialog } onClose={ onCloseHandler } aria-labelledby="responsive-dialog-title">
-            <DialogTitle id="responsive-dialog-title">{ subscriptionSuccessTitle }</DialogTitle>
-            <DialogContent>
-                <DialogContentText>{ subscriptionSuccessMessage }</DialogContentText>
-            </DialogContent>
-            <DialogActions>
-                <CloseButton clicked={ onCloseHandler } autoFocusStatus={ true } /> 
-            </DialogActions>
-        </Dialog>
+        <Dialog 
+            show={ showDialog }
+            onCloseHandler={ onCloseHandler }
+            title={ subscriptionSuccessTitle }
+            buttons={ <CloseButton clicked={ onCloseHandler } autoFocusStatus={ true } /> }
+        >
+            <MuiDialogContentText>{ subscriptionSuccessMessage }</MuiDialogContentText>
+        </Dialog>  
     );
 };
 

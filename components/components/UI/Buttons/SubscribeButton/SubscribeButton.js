@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
-import Button from '@material-ui/core/Button';
+import Button from '../Button/Button';
 
 const SubscribeButton = (props) => {
     const { clicked, autoFocusStatus, disableStatus } = props;
 
     return (
-        <Button onClick={ clicked } color="secondary" autoFocus={ autoFocusStatus } disabled={ disableStatus }>
+        <Button onClick={ clicked } autoFocus={ autoFocusStatus } disabled={ disableStatus }>
             Subscribe
         </Button>
     );    

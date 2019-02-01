@@ -1,9 +1,9 @@
-import ChittawelaCarousel from '../components/containers/ChittawelaCarousel/ChittawelaCarousel';
+import LandingPageCarousel from '../components/containers/LandingPageCarousel/LandingPageCarousel';
 import withLayout from '../components/hoc/withLayout';
 
 const index = () => {
     return(  
-        <ChittawelaCarousel />    
+        <LandingPageCarousel />    
     );
 };
 

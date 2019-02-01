@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
-const emptyBox = (props) => {
+const EmptyBox = props => {
     const { width, height } = props;
 
     return (
@@ -18,9 +18,9 @@ const emptyBox = (props) => {
     );    
 };
 
-emptyBox.propTypes = {
+EmptyBox.propTypes = {
     width: PropTypes.string.isRequired,
     height: PropTypes.string.isRequired
 };
 
-export default emptyBox;
+export default EmptyBox;

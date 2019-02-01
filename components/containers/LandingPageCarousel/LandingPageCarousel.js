@@ -5,7 +5,7 @@ import ConfirmationDialog from '../../components/UI/Dialogs/ConfirmationDialog/C
 import Slides from './Slides/Slides';
 import slidesData from './SlidesData';
 
-class ChittawelaCarousel extends Component {
+class LandingPageCarousel extends Component {
     state = {
         showSubscribeDialog: false,
         showConfirmationDialog: false
@@ -52,4 +52,4 @@ class ChittawelaCarousel extends Component {
     };    
 };
 
-export default ChittawelaCarousel;
+export default LandingPageCarousel;

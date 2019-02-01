@@ -36,24 +36,21 @@ describe('<SubscribeDialog />', () => {
         console.log(wrapper.debug());
     });
 
-    it(`should contain a component '<WithStyles(Dialog) />'`, () => {
-        expect(wrapper.name()).toBe('WithStyles(Dialog)');
+    it(`should render a component <withStylingContextProvider(Dialog) /> at the top of the DOM tree`, () => {
+        expect(wrapper.name()).toBe('withStylingContextProvider(Dialog)');
     });
 
-    it(`the first child wrapped within <WithStyles(Dialog) /> should be the component '<WithStyles(DialogTitle) />'`, () => {
-        expect(wrapper.childAt(0).name()).toBe('WithStyles(DialogTitle)');
+    const childNames = ['WithStyles(DialogContentText)', 'EmptyBox', 'UncontrolledInput', 'UncontrolledInput'];
+    
+    it(`the children wrapped by <withStylingContextProvider(Dialog) /> are ${ childNames.join() }`, () => {
+        expect(wrapper.children().map(node => node.name())).toStrictEqual(childNames);
     });
 
-    it(`the second child wrapped within <WithStyles(Dialog) /> should be the component '<WithStyles(DialogContent) />'`, () => {
-        expect(wrapper.childAt(1).name()).toBe('WithStyles(DialogContent)');
-    });
+    // const inside = wrapper.at(0);
 
-    it(`'<WithStyles(DialogContent) />' should wrap a first child component <WithStyles(DialogContentText) />`, () => {
-        expect(wrapper.childAt(1).childAt(0).name()).toBe('WithStyles(DialogContentText)');
-    });
+    // console.log(inside.debug());
 
-    it(`the third child wrapped within <WithStyles(Dialog) /> should be the component '<SubscribeDialogButtons />'`, () => {
-        expect(wrapper.childAt(2).name()).toBe('SubscribeDialogButtons');
-    });
+    // User interactions:
+
 
 });

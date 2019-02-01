@@ -7,15 +7,15 @@ const Slides = props => {
     const { slidesData } = props;
 
     return (
-    <Fragment>
-        { slidesData.map((slide, i) => (
-            <StyledSlide 
-                key={i}
-                media={ <Image cloudName="chittawela" publicId={ slide.publicid }/> }
-                { ...slide } 
-            />
-        ))}
-    </Fragment>
+        <Fragment>
+            { slidesData.map((slide, i) => (
+                <StyledSlide 
+                    key={i}
+                    media={ <Image cloudName="chittawela" publicId={ slide.publicid }/> }
+                    { ...slide } 
+                />
+            ))}
+        </Fragment>
     );
 };
 

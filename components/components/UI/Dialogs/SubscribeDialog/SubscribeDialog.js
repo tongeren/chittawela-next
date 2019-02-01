@@ -2,13 +2,12 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import produce from 'immer'; // https://github.com/mweststrate/immer: use for handling nested state
 
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContentText from '@material-ui/core/DialogContentText';
 
-import SubscribeDialogButtons from './SubscribeDialogButtons/SubscribeDialogButtons';
+import Dialog from '../Dialog/Dialog';
 import InputBoxFactory from '../../InputBoxes/InputBoxFactory/InputBoxFactory';
+import SubscribeDialogButtons from '../../Buttons/SubscribeDialogButtons/SubscribeDialogButtons';
+import EmptyBox from '../../EmptyBox/EmptyBox';
 
 import { subscribeToNewsletter } from '../../../../../lib/api/public'; 
 
@@ -92,37 +91,32 @@ class SubscribeDialog extends Component {
         // Initialize factory
         InputBoxFactory.init(this.handleChange);
 
-        return(
+        return (
             <Dialog 
-                open={ showDialog } 
-                onClose={ onCloseHandler } 
-                onBackdropClick = { onCloseHandler } 
-                aria-labelledby="form-dialog-title"
+                show={ showDialog }
+                onCloseHandler={ onCloseHandler }
+                title={ dialogTitleText }
+                buttons={   <SubscribeDialogButtons
+                                handleCancel={ onCloseHandler }
+                                handleSubscribe={ () => this.subscribeHandler }
+                                validationStatus={ this.isValidSubscriptionInfo() } 
+                            />  }
             >
-                <DialogTitle id="form-dialog-title">{ dialogTitleText }</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        { subscribeDialogText }
-                    </DialogContentText>
-                    { InputBoxFactory.build('name', { 
-                        margin: "dense", 
+                <MuiDialogContentText>{ subscribeDialogText }</MuiDialogContentText>
+                <EmptyBox width={'80vw'} height={'2vh'}/>
+                {   InputBoxFactory.build('name', { 
+                        margin: 'normal', 
                         label: fullNameInputFieldText, 
-                        variant: "outlined", 
+                        variant: 'outlined', 
                         defaultValue: name 
-                    }) } 
-                    { InputBoxFactory.build('email', { 
-                        margin: "dense", 
+                }) } 
+                {   InputBoxFactory.build('email', { 
+                        margin: 'normal', 
                         label: emailAddressInputFieldText, 
-                        variant: "outlined", 
+                        variant: 'outlined', 
                         defaultValue: email 
-                    }) }            
-                </DialogContent>
-                <SubscribeDialogButtons
-                    handleCancel={ onCloseHandler }
-                    handleSubscribe={ this.subscribeHandler }
-                    validationStatus={ this.isValidSubscriptionInfo() } 
-                />
-            </Dialog>
+                }) }    
+            </Dialog>  
         );
     }; 
 };

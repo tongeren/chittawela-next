@@ -1,14 +1,14 @@
+import { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import DialogActions from '@material-ui/core/DialogActions';
 
-import CancelButton from '../../../Buttons/CancelButton/CancelButton';
-import SubscribeButton from '../../../Buttons/SubscribeButton/SubscribeButton';
+import CancelButton from '../CancelButton/CancelButton';
+import SubscribeButton from '../SubscribeButton/SubscribeButton';
 
 const SubscribeDialogButtons = props => {
     const { handleCancel, handleSubscribe, validationStatus } = props;
 
     return (
-        <DialogActions>
+        <Fragment>
             <CancelButton 
                 clicked={ handleCancel }
                 autoFocusStatus={ !validationStatus }
@@ -18,7 +18,7 @@ const SubscribeDialogButtons = props => {
                 autoFocusStatus={ validationStatus } 
                 disableStatus={ !validationStatus }
             />
-        </DialogActions>
+        </Fragment>
     );    
 };
 

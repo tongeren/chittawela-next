@@ -1,4 +1,4 @@
-import ChittawelaCarousel from './ChittawelaCarousel';
+import LandingPageCarousel from './LandingPageCarousel';
 
 const setup = () => {
     const state = {
@@ -6,7 +6,7 @@ const setup = () => {
         showConfirmationDialog: false
     };
 
-    const wrapper = shallow(<ChittawelaCarousel />);
+    const wrapper = shallow(<LandingPageCarousel />);
     
     return {
         state,
@@ -14,7 +14,7 @@ const setup = () => {
     };
 };
 
-describe('ChittawelaCarousel', () => {
+describe('LandingPageCarousel', () => {
     const { wrapper } = setup();
 
     it.skip(`debug`, () => {
@@ -40,4 +40,8 @@ describe('ChittawelaCarousel', () => {
     it(`the third child wrapped within <Fragment /> should be the component '<ConfirmationDialog />'`, () => {
         expect(wrapper.childAt(2).name()).toBe('ConfirmationDialog');
     });
+
+    // User interactions:
+
+    
 });

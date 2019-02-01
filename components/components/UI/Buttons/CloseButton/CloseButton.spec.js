@@ -1,32 +1,30 @@
-import { mount } from 'enzyme';
-import Button from '@material-ui/core/Button';
 import CloseButton from './CloseButton';
 
 const doNothing = () => {};
 
+const setup = () => {
+    const props = {
+        clicked: doNothing, 
+        autoFocusStatus: true
+    };
+
+    const wrapper = shallow(<CloseButton { ...props } />);
+    
+    return {
+        props,
+        wrapper
+    };
+};
+
 describe('<CloseButton />', () => {
-    let wrapper;
+    const { wrapper } = setup();       
     
-    // Use Jest lifecycle method 'beforeEach' to execute code before the assertions
-    beforeEach(() => {
-        wrapper = mount(<CloseButton clicked={ doNothing } autoFocusStatus />) 
-    });         
-    
-    // it(`debug`, () => {
-    //    console.log(wrapper.debug());
-    // });
-
-    it(`should render a component with name 'CloseButton'`, () => {
-        expect(wrapper.name()).toBe('CloseButton');
+    it.skip(`debug`, () => {
+        console.log(wrapper.debug());
     });
-    
-    it(`should contain a MUI Button component '<Button />'`, () => {
-        expect(wrapper.containsMatchingElement(<Button>Close</Button>)).toBe(true);
-    })
 
-    it(`contains the matching element '<span>Cancel</span>' created from MUI '<Button />'`, () => {
-        expect(wrapper.containsMatchingElement(<span>Close</span>)).toBe(true);
+    it(`should render a component <WithStyles(withStylingContextConsumer(Button)) /> at the top of the DOM tree`, () => {
+        expect(wrapper.name()).toBe('WithStyles(withStylingContextConsumer(Button))');
     });
 
 });
-
