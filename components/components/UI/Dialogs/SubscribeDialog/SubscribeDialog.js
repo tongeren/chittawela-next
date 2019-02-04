@@ -48,8 +48,10 @@ class SubscribeDialog extends Component {
         );         
     };
 
-    subscribeHandler = async (event) => {    
-        if (!this.isValidSubscriptionInfo()) { return; };
+    subscribeHandler = async (event) => {   
+        const { nameError, emailError } = this.state.error;
+        const invalid = nameError || emailError;   
+        if (invalid) { return; };
         
         event.preventDefault();
 
@@ -76,6 +78,7 @@ class SubscribeDialog extends Component {
         this.props.onSubscribeHandler();
     };
   
+    /*
     isValidSubscriptionInfo = () => {
         const { name, email } = this.state.draft;
         const isName = isValidName(name);
@@ -83,9 +86,15 @@ class SubscribeDialog extends Component {
         const isValid = isName && isEmail;        
         return isValid;
     };
+    */
+
+    onSubscribeHandler = () => {
+        () => this.subscribeHandler();
+    };
 
     render() {
         const { showDialog, onCloseHandler } = this.props;
+        const { nameError, emailError } = this.state.error;
         const { name, email } = this.state.draft;
 
         // Initialize factory
@@ -96,11 +105,12 @@ class SubscribeDialog extends Component {
                 show={ showDialog }
                 onCloseHandler={ onCloseHandler }
                 title={ dialogTitleText }
-                buttons={       <SubscribeDialogButtons
-                                    handleCancel={ onCloseHandler }
-                                    handleSubscribe={ () => this.subscribeHandler() }
-                                    validationStatus={ this.isValidSubscriptionInfo() } 
-                                />  }
+                buttons={ 
+                        <SubscribeDialogButtons 
+                            handleCancel={ onCloseHandler } 
+                            handleSubscribe={ this.onSubscribeHandler } 
+                            validationStatus={ nameError && emailError}  /> 
+                }
             >
                 <MuiDialogContentText>{ subscribeDialogText }</MuiDialogContentText>
                 <EmptyBox width={'60vw'} height={'1vh'}/>

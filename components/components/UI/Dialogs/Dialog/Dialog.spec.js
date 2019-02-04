@@ -9,7 +9,7 @@ const setup = () => {
         onCloseHandler: clickCallback,
         title: '',
         children: '',
-        buttons: ''
+        buttons: () => <p />
     };
 
     const wrapper = shallow(<Dialog { ...props } />);

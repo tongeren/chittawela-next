@@ -1,4 +1,4 @@
-import LandingPageCarousel from '../components/containers/LandingPageCarousel/LandingPageCarousel';
+import LandingPageCarousel from '../components/components/UI/LandingPageCarousel/LandingPageCarousel';
 import withLayout from '../components/hoc/withLayout';
 
 const index = () => {

@@ -34,7 +34,7 @@ Dialog.propTypes={
     onCloseHandler: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
     children: PropTypes.node.isRequired,
-    buttons: PropTypes.node.isRequired
+    buttons: PropTypes.element.isRequired
 };
 
 export default withStylingContextProvider(style)(Dialog);
