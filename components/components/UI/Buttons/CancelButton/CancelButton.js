@@ -6,7 +6,7 @@ const CancelButton = (props) => {
     const { handler, autoFocusStatus } = props;
 
     return (
-        <Button onClick={ handler } autoFocus={ autoFocusStatus }>
+        <Button clicked={ handler } autoFocus={ autoFocusStatus }>
             Cancel
         </Button>
     );    

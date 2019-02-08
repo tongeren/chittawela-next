@@ -6,7 +6,7 @@ const setup = () => {
 
     const props = {
         handler: clickCallback, 
-        autoFocusStatus: true
+        status: true
     };
 
     const wrapper = shallow(<CloseButton { ...props } />);
@@ -31,11 +31,6 @@ describe('<CloseButton />', () => {
 
     it(`should render a component <WithStyles(withStylingContextConsumer(Button)) /> at the top of the DOM tree`, () => {
         expect(wrapper.name()).toBe('WithStyles(withStylingContextConsumer(Button))');
-    });
-
-    it(`if the user clicks the button, then the handler is called`, () => {
-        wrapper.simulate('click');
-        sinon.assert.called(props.handler);
     });
 
 });

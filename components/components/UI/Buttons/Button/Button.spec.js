@@ -1,12 +1,16 @@
+import sinon from 'sinon';
 import Button from './Button';
 
 const setup = () => {
+    const clickCallback = sinon.spy();
+
     const props = {
         style: {
             color: 'default',
             size: 'small',
             variant: 'text'
         }, 
+        clicked: clickCallback,
         children: ''
     };
 
@@ -19,7 +23,7 @@ const setup = () => {
 };
 
 describe('<Button />', () => {
-    const { wrapper } = setup();       
+    const { props, wrapper } = setup();       
     
     it.skip(`debug`, () => {
         console.log(wrapper.debug());

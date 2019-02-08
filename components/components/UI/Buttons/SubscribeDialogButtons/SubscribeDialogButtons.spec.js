@@ -41,15 +41,5 @@ describe('<SubscribeDialogButtons />', () => {
         expect(wrapper.children().map(node => node.name())).toStrictEqual(childNames);
     });
 
-    it(`if the user clicks the CancelButton, then handleCancel is called`, () => {
-        wrapper.childAt(0).dive().simulate('click');
-        sinon.assert.called(props.handleCancel);
-    });
-
-    it(`if the user clicks the SubscribeButton, then handleSubscribe is called`, () => {
-        wrapper.childAt(1).dive().simulate('click');
-        sinon.assert.called(props.handleSubscribe);
-    });
-
 });
 

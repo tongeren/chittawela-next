@@ -11,15 +11,17 @@ const styles = theme => ({
 });
 
 const Button = props => {
-    const { classes, style, children } = props;
+    const { classes, clicked, disabled, style, children } = props;
     
     return (
-        <MuiButton className={ classes.button } { ...style }>{ children }</MuiButton>
+        <MuiButton className={ classes.button } onClick={ clicked } disabled={ disabled } { ...style }>{ children }</MuiButton>
     );
 };
 
 Button.propTypes={
     classes: PropTypes.object.isRequired,
+    clicked: PropTypes.func.isRequired,
+    disabled: PropTypes.bool,
     style: PropTypes.shape({
         color: PropTypes.oneOf(['default', 'inherit', 'primary', 'secondary']).isRequired,
         size: PropTypes.oneOf(['small','medium', 'secondary']).isRequired,

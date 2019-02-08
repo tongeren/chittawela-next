@@ -20,15 +20,11 @@ describe('<ConfirmationDialog />', () => {
     const { wrapper } = setup();       
     
     it.skip(`debug`, () => {
-        console.log(wrapper.debug());
+        console.log(wrapper.dive().debug());
     });
 
     it(`should render a component <withStylingContextProvider(Dialog) /> at the top of the DOM tree`, () => {
         expect(wrapper.name()).toBe('withStylingContextProvider(Dialog)');
-    });
-
-    it(`the only one child wrapped within <withStylingContextProvider(Dialog) /> should be the component '<WithStyles(DialogContentText) />'`, () => {
-        expect(wrapper.children().name()).toBe('WithStyles(DialogContentText)');
     });
 
 });

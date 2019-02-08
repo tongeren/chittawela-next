@@ -2,14 +2,26 @@ import sinon from 'sinon';
 import Dialog from './Dialog';
 
 const setup = () => {
-    const clickCallback = sinon.spy();
+    const closeCallback = sinon.spy();
+    
+    const renderContent = () => <p />;
+    const renderButtons = () => <p />;
+
+    const myButtonProps = {
+        clicked: closeCallback, 
+        text: 'Click me!'
+    };
+
+    const buttonRenderFunction = (text, clicked) => <button onClick={ clicked }>text</button>;
 
     const props = {
         show: true,
-        onCloseHandler: clickCallback,
+        onCloseHandler: closeCallback,
         title: '',
-        children: '',
-        buttons: () => <p />
+        content: renderContent,
+        buttons: renderButtons, 
+        handlers: { onClick: closeCallback },
+        status: { status: true }       
     };
 
     const wrapper = shallow(<Dialog { ...props } />);

@@ -2,10 +2,10 @@ import PropTypes from 'prop-types';
 import Button from '../Button/Button';
 
 const CloseButton = props => {
-    const { handler, autoFocusStatus } = props;
+    const { handler, status } = props;
 
     return (
-        <Button onClick={ handler } autoFocus={ autoFocusStatus }>
+        <Button clicked={ handler } autoFocus={ status }>
             Close
         </Button>
     );
@@ -13,7 +13,7 @@ const CloseButton = props => {
 
 CloseButton.propTypes={
     handler: PropTypes.func.isRequired,
-    autoFocusStatus: PropTypes.bool.isRequired    
+    status: PropTypes.bool.isRequired    
 };
 
 export default CloseButton;

@@ -11,8 +11,8 @@ import ButtonTypes from '../../../../styles/types/buttons';
 const style = ButtonTypes.dialogs;
 
 const Dialog = props => {
-    const { show, onCloseHandler, title, children, buttons } = props;
-    
+    const { show, onCloseHandler, title, content, buttons, handlers, status } = props;
+
     return (
         <MuiDialog 
             open={ show } 
@@ -20,11 +20,11 @@ const Dialog = props => {
             onBackdropClick = { onCloseHandler } 
             aria-labelledby="form-dialog-title"
         >
-            <MuiDialogTitle id="form-dialog-title">{ title }</MuiDialogTitle>
+            <MuiDialogTitle>{ title }</MuiDialogTitle>
             <MuiDialogContent>
-                { children }
+                { content() }
             </MuiDialogContent>
-            <MuiDialogActions>{ buttons }</MuiDialogActions>
+            <MuiDialogActions>{ buttons(handlers, status) }</MuiDialogActions>
         </MuiDialog>
     );    
 };
@@ -33,9 +33,15 @@ Dialog.propTypes={
     show: PropTypes.bool.isRequired,
     onCloseHandler: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
-    children: PropTypes.node.isRequired,
-    buttons: PropTypes.element.isRequired
+    content: PropTypes.func.isRequired,
+    buttons: PropTypes.func.isRequired,
+    handlers: PropTypes.objectOf(PropTypes.func).isRequired,
+    status: PropTypes.object.isRequired
 };
 
 export default withStylingContextProvider(style)(Dialog);
+//export default Dialog;
 
+/*
+
+*/

@@ -33,22 +33,21 @@ class LandingPageCarousel extends Component {
             <Fragment>
                 <CarouselContent 
                     clicked={ showSubscribeDialog }
-                    onClickHandler={ () => this.openSubscribeDialogHandler() } 
+                    onClickHandler={ this.openSubscribeDialogHandler } 
                     slidesData={ slidesData }
                 />  
                 <SubscribeDialog
                     showDialog={ showSubscribeDialog }
-                    onCloseHandler={ () => this.closeSubscribeDialogHandler() }
-                    onSubscribeHandler={ () => this.openConfirmationDialogHandler() }
-                /> 
+                    onCloseHandler={ this.closeSubscribeDialogHandler }
+                    onSubscribeHandler={ this.openConfirmationDialogHandler }
+                />   
                 <ConfirmationDialog  
                     showDialog={ showConfirmationDialog }
-                    onCloseHandler={ () => this.closeConfirmationDialogHandler() }
-                />   
+                    onCloseHandler={ this.closeConfirmationDialogHandler }
+                /> 
             </Fragment>
         );
     };    
 };
 
 export default LandingPageCarousel;
-

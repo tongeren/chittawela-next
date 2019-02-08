@@ -5,7 +5,7 @@ const SubscribeButton = (props) => {
     const { handler, autoFocusStatus, disableStatus } = props;
 
     return (
-        <Button onClick={ handler } autoFocus={ autoFocusStatus } disabled={ disableStatus }>
+        <Button clicked={ handler } autoFocus={ autoFocusStatus } disabled={ disableStatus }>
             Subscribe
         </Button>
     );    

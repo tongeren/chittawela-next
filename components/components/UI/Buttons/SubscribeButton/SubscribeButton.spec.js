@@ -34,10 +34,5 @@ describe('<SubscribeButton />', () => {
         expect(wrapper.name()).toBe('WithStyles(withStylingContextConsumer(Button))');
     });
 
-    it(`if the user clicks the button, then the handler is called`, () => {
-        wrapper.simulate('click');
-        sinon.assert.called(props.handler);
-    });
-
 });
 

@@ -11,6 +11,13 @@ const setup = () => {
         onSubscribeHandler: subscribeCallback
     };
 
+    const handlers = {
+        handleCancel: props.onCloseHandler, 
+        handleSubscribe: props.onSubscribeHandler
+    };
+
+    const status = { validationStatus: props.showDialog };
+
     const state = {
         error: {
             name: true,
@@ -27,12 +34,14 @@ const setup = () => {
     return {
         props,
         state,
+        handlers,
+        status,
         wrapper
     };
 };
 
 describe('<SubscribeDialog />', () => {
-    const { props, wrapper } = setup();       
+    const { props, handlers, status, wrapper } = setup();       
     
     afterEach(() => {
         // Restore the default sandbox here in order to not get memory leaks
@@ -47,26 +56,17 @@ describe('<SubscribeDialog />', () => {
         expect(wrapper.name()).toBe('withStylingContextProvider(Dialog)');
     });
 
+    const contentWrapper = wrapper.renderProp('content')();
     const childNames = ['WithStyles(DialogContentText)', 'EmptyBox', 'UncontrolledInput', 'UncontrolledInput'];
     
-    it(`the children wrapped by <withStylingContextProvider(Dialog) /> are ${ childNames.join() }`, () => {
-        expect(wrapper.children().map(node => node.name())).toStrictEqual(childNames);
+    it(`the render prop 'content' should render ${ childNames.join()} as children of a <Fragment />`, () => {
+        expect(contentWrapper.children().map(node => node.name())).toStrictEqual(childNames);
     });
 
-    // User interactions:
-    /*
-    it(`if the user clicks the button, then the handler is called`, () => {
-        const buttonsWrapper = shallow(wrapper.prop('buttons'));
-        console.log(buttonsWrapper.debug());
-        const cancelButtonWrapper = buttonsWrapper.childAt(0).dive();
-        console.log(cancelButtonWrapper.debug());
-        const subscribeButtonWrapper = buttonsWrapper.childAt(1).dive();
-        console.log(subscribeButtonWrapper.debug());
-        subscribeButtonWrapper.simulate('click');
-        sinon.assert.called(props.onCloseHandler);
-        subscribeButtonWrapper.simulate('click');
-        sinon.assert.called(props.onSubscribeHandler);
+    const buttonsWrapper = wrapper.renderProp('buttons')(handlers, status);
+
+    it(`the render prop 'buttons' should render a component <SubscribeDialogButtons />`, () => {
+        expect(buttonsWrapper.name()).toBe('SubscribeDialogButtons');
     });
-    */
 
 });
